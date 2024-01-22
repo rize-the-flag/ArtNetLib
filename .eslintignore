@@ -1,0 +1,4 @@
+**/*.js
+**/*.http
+**/*.tsbuildinfo
+**/*.map

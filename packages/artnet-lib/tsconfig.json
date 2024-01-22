@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "../../tsconfig.json"
+  ],
+  "compilerOptions": {
+    "outDir": "./build",
+    "composite": true,
+    "declarationDir": "./build/types",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": true,
+  },
+  "exclude": ["./build"]
+}

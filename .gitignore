@@ -1,0 +1,11 @@
+node_modules
+.idea
+**/*.js
+**/*.map
+.git
+.vscode
+**/build
+**/*.tsbuildinfo
+**/dist
+.fleet
+.github

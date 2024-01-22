@@ -1,0 +1,1 @@
+export const MAX_LISTENERS_PER_EVENT = 10;

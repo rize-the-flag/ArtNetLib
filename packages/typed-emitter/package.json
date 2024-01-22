@@ -1,0 +1,18 @@
+{
+  "name": "typed-emitter",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "description": "simple and very strong typed event emitter with additional functionalities",
+  "main": "build/index.js",
+  "types": "build/types",
+  "scripts": {
+    "build": "tsc --build",
+    "lint": "eslint",
+    "cleanup": "tsc --build --clean"
+  },
+  "author": "Rize-The-Flag",
+  "license": "MIT",
+  "files": [
+    "build"
+  ]
+}

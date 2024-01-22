@@ -1,0 +1,9 @@
+[submodule "packages/typed-emitter"]
+	path = packages/typed-emitter
+	url = git@github.com:AndrSlip/typed-emitter.git
+[submodule "packages/protocol"]
+	path = packages/protocol
+	url = git@github.com:AndrSlip/protocol.git
+[submodule "packages/common"]
+	path = packages/common
+	url = git@github.com:AndrSlip/common.git

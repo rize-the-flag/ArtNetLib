@@ -1,0 +1,30 @@
+{
+  "name": "@rtf-dm/common",
+  "version": "0.0.1",
+  "description": "Decorators library",
+  "main": "build/index.js",
+  "types": "build/types",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc --build",
+    "lint": "eslint",
+    "cleanup": "tsc --build --clean"
+  },
+  "keywords": [
+    "Logger"
+  ],
+  "author": "Rize-The-Flag",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.0",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.7"
+  },
+  "files": [
+    "build"
+  ]
+}

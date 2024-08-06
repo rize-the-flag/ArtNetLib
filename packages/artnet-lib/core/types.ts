@@ -1,5 +1,3 @@
-export type ProtocolVersion = 14;
-
 export type valueOf<T> = T[keyof T];
 
 export interface NetworkConfig {

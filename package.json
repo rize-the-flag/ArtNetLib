@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build:p": "npm run build --workspace=packages",
+    "build": "npm run build --workspace=packages",
     "lint": "eslint",
     "lint:fix": "eslint packages/**/*.ts --fix",
     "cleanup": "tsc --build --clean"

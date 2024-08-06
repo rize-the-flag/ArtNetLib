@@ -1,6 +1,5 @@
-export const PROTOCOL_VERSION = 14;
-export const ARTNET_PACKET_ID = 'Art-Net';
-export const ARTNET_PORT = 6454;
+export const ARTNET_PORT = 6454
+
 export const DEFAULT_POLL_INTERVAL = 3000;
 export const NODE_DEATH_TIMEOUT_MS = 10000;
 export const DEFAULT_NODE_WATCHER_INTERVAL_MS = 2000;

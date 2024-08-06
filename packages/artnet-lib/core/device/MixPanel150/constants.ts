@@ -19,16 +19,17 @@ export const FUNCTION_DATA_SUB_CHANNEL_2 = 4;
 export const FUNCTION_DATA_SUB_CHANNEL_3 = 5;
 export const FUNCTION_DATA_SUB_CHANNEL_4 = 6;
 
-export const BRIGHTNESS_DMX_MAX = 200;
+export const BRIGHTNESS_DMX_MAX = 255;
 export const BRIGHTNESS_PERCENT_MAX = 100;
 export const BRIGHTNESS_PERCENT_MIN = 0;
 export const BRIGHTNESS_STEP = BRIGHTNESS_DMX_MAX / 100;
 
 export const CCT_MAX = 7500;
 export const CCT_MIN = 2700;
-export const CCT_STEP = (CCT_MAX - CCT_MIN) / 250;
+export const CCT_DMX_MAX = 255;
+export const CCT_STEP = (CCT_MAX - CCT_MIN) / CCT_DMX_MAX;
 
-export const GREEN_MAGENTA_DMX_MAX = 226;
+export const GREEN_MAGENTA_DMX_MAX = 255;
 export const GREEN_MAGENTA_MAX = 50;
 export const GREEN_MAGENTA_MIN = -50;
 export const GREEN_MAGENTA_STEP = GREEN_MAGENTA_DMX_MAX / 100;

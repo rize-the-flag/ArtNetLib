@@ -1,38 +1,41 @@
 import { ArtNetPacket } from './common/art-net-packet';
-import { PROTOCOL_VERSION } from '../constants';
+import {DIAGNOSTICS_MESSAGE_POLICY, PROTOCOL_VERSION} from './constants';
 import {
 	DiagnosisPolicy,
 	DiagPriority,
 	PollPacketPayload,
 	PollPacketSchema,
 	SendArtPollReplyPolicy,
-} from './packet.interface';
+} from './common/packet.interface';
 import { DIAG_PRIORITY, NODE_BEHAVIOUR_MASK, OP_CODE } from './constants';
 
-export class PollPacket extends ArtNetPacket<PollPacketPayload, PollPacketSchema> {
-	//order of schema fields make sense do not change it!!!
-	static readonly schema: PollPacketSchema = {
-		protoVersion: { length: 2, type: 'number', byteOrder: 'BE' },
-		flags: { length: 1, type: 'number' },
-		diagPriority: { length: 1, type: 'number' },
-		targetPortAddressTop: { length: 2, type: 'number', byteOrder: 'BE' },
-		targetPortAddressBottom: { length: 2, type: 'number', byteOrder: 'BE' },
-	};
+
+export class PollPacket extends ArtNetPacket<PollPacketPayload> {
 
 	constructor(payload: Partial<PollPacketPayload> = {}) {
+
+		const pollPacketPayload: PollPacketPayload = {
+			protoVersion: PROTOCOL_VERSION,
+			diagPriority: DIAG_PRIORITY.DpLow,
+			flags: 0b00000000,
+			targetPortAddressTop: 0,
+			targetPortAddressBottom: 0,
+			...payload
+		}
+
+		//order of schema fields make sense do not change it!!!
+		const pollPacketSchema: PollPacketSchema = [
+			['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
+			['flags', { length: 1, type: 'number' }],
+			['diagPriority', { length: 1, type: 'number' }],
+			['targetPortAddressTop', { length: 2, type: 'number', byteOrder: 'BE' }],
+			['targetPortAddressBottom', { length: 2, type: 'number', byteOrder: 'BE' }],
+		]
+
 		super(
 			OP_CODE.POLL,
-			Object.assign(
-				{
-					protoVersion: PROTOCOL_VERSION,
-					diagPriority: DIAG_PRIORITY.DpLow,
-					flags: 0b00000000,
-					targetPortAddressTop: 0,
-					targetPortAddressBottom: 0,
-				},
-				{ ...payload },
-			),
-			PollPacket.schema,
+			pollPacketPayload,
+			pollPacketSchema,
 		);
 
 		this.sendMeDiagnostics(true)

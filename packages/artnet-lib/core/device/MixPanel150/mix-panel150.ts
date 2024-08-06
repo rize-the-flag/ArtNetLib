@@ -31,8 +31,9 @@ export class MixPanel150 extends Device {
   }
 
   public setBrightness({percent}: { percent: number }): void {
+    this.logger.info('USEFULL INFO DELETE PLEASE 2')
     const percentInRange = Math.max(Constants.BRIGHTNESS_PERCENT_MIN, Math.min(Constants.BRIGHTNESS_PERCENT_MAX, percent));
-    const value = Constants.BRIGHTNESS_STEP * percentInRange;
+    const value = Math.ceil(Constants.BRIGHTNESS_STEP * percentInRange);
     this.logger.info(`setBrightness(${percent}) => ${value}`);
     this.setChannel(Constants.BRIGHTNESS_CHANNEL, parseInt(value.toFixed()));
   }
@@ -46,7 +47,7 @@ export class MixPanel150 extends Device {
 
   public setGreenMagentaBias({bias}: { bias: number }): void {
     const biasInRange = Math.max(Constants.GREEN_MAGENTA_MIN, Math.min(Constants.GREEN_MAGENTA_MAX, bias));
-    const value = Math.ceil(parseFloat(((Constants.GREEN_MAGENTA_MAX + biasInRange) * Constants.GREEN_MAGENTA_STEP).toFixed(1)));
+    const value = Math.ceil((Constants.GREEN_MAGENTA_MAX + biasInRange) * Constants.GREEN_MAGENTA_STEP);
     this.logger.info(`setGreenMagentaBias(${bias}) => ${value}`);
     this.setChannel(Constants.MODE_CHANNEL, Constants.MODE_CCT).setChannel(Constants.FUNCTION_DATA_SUB_CHANNEL_1, value);
   }

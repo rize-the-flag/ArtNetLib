@@ -4,6 +4,7 @@ import {LOG_FILE_NAME, loggerConfig} from './logger.config';
 import {LoggerInterface} from "./logger.interface";
 import {LogMethod, MakePropertyInjector} from "@rtf-dm/common";
 
+
 const tsLogger = new TSLogger({
   name: loggerConfig.name,
   type: loggerConfig.type,

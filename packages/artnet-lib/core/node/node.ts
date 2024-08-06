@@ -1,9 +1,8 @@
 import {ArtNetLibError} from '../lib-error';
-import {AddressPacketPayload, PollReplyPacketPayload} from '../packets/packet.interface';
-import {AddressPacket} from '../packets/address-packet';
 import {Universe} from '../universe/universe';
 import {Communicator} from '../communicator/communicator.interface';
 import {NodeInfo} from './node.interface';
+import {AddressPacket, AddressPacketPayload, PollReplyPacketPayload} from "@rtf-dm/artnet-packets";
 
 export class Node {
     private networkCommunicator: Communicator;

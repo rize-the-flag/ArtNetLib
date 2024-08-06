@@ -1,13 +1,13 @@
 import {Node} from './node';
-import {AddressPacketPayload, PollReplyPacketPayload} from '../packets/packet.interface';
 import {Communicator} from '../communicator/communicator.interface';
 import {DEFAULT_NODE_WATCHER_INTERVAL_MS, NODE_DEATH_TIMEOUT_MS} from "../constants";
 import {NodeManagerEvents} from "./node-manager.interface";
 import {Universe} from "../universe/universe";
 import {ArtNetLibError} from "../lib-error";
 import {Log} from "../logger";
-import {TypedEmitter} from '@rtf-dm/typed-emitter';
+import {TypedEmitter} from '@rtf-dm/typed-emitter'
 import {clearInterval} from 'timers';
+import {AddressPacketPayload, PollReplyPacketPayload} from "@rtf-dm/artnet-packets";
 
 
 export class NodeManager extends TypedEmitter<NodeManagerEvents> {

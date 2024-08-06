@@ -1,10 +1,10 @@
-import {DmxPacket} from '../packets/dmx-packet';
 import {DeviceControlPacket} from '../device/device.interface';
 import {MAX_UNIVERSE_SIZE} from '../constants';
 import {ArtNetLibError} from "../lib-error";
 import {ThrowsException, valueOf} from "../types";
 import {Log} from "../logger";
 import {SupportedDevices} from "../device/common/device-contracts";
+import {DmxPacket} from "@rtf-dm/artnet-packets";
 
 export class Universe {
     private readonly devices: InstanceType<valueOf<SupportedDevices>>[] = [];
@@ -13,9 +13,12 @@ export class Universe {
 
     constructor(
         name: string,
-        controlPacket?: DeviceControlPacket
+        controlPacket?: DeviceControlPacket,
+        maxDMXLength: number = 512
     ) {
-        this.controlPacket =  controlPacket ?? new DmxPacket();
+        this.controlPacket =  controlPacket ?? new DmxPacket({
+            length: maxDMXLength
+        });
         this.name = name;
     }
 
@@ -26,9 +29,12 @@ export class Universe {
 
     public add(device: InstanceType<valueOf<SupportedDevices>>): ThrowsException<number> {
         //could allocate more than 512 channels
-        if (this.calcSize(device) > MAX_UNIVERSE_SIZE) {
+        const dmxDataSize = this.calcSize(device);
+
+        if (dmxDataSize > MAX_UNIVERSE_SIZE) {
             throw new ArtNetLibError('UNIVERSE_MAX_SIZE_REACHED');
         }
+
         this.devices.push(device);
         return this.devices.length - 1;
     }

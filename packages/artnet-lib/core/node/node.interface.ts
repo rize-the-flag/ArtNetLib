@@ -1,6 +1,6 @@
 import { NODE_STATUS } from '../constants';
 import { valueOf } from '../types';
-import {PollReplyPacketPayload} from "../packets/packet.interface";
+import {PollReplyPacketPayload} from "@rtf-dm/artnet-packets";
 
 export type NodeStatus = valueOf<typeof NODE_STATUS>;
 

@@ -1,14 +1,12 @@
-import {PollPacket} from '../packets/poll-packet';
 import {DEFAULT_POLL_INTERVAL} from '../constants';
 import {RemoteInfo} from 'dgram';
-import {PollReplyPacket} from '../packets/poll-reply-packet';
 import {InjectLogger} from '../logger';
 import {clearInterval} from 'timers';
-import {PollReplyPacketPayload} from '../packets/packet.interface';
 import {DiscoveryStatus} from './discovery.interface';
 import {Communicator} from '../communicator/communicator.interface';
 import {NodeManager} from '../node/node-manager';
 import {LoggerInterface} from '../logger/logger.interface';
+import {PollPacket, PollReplyPacket, PollReplyPacketPayload} from "@rtf-dm/artnet-packets";
 
 export class Discovery {
   @InjectLogger private logger: LoggerInterface;
@@ -57,7 +55,8 @@ export class Discovery {
 
   private discoveryLoop = () => {
     if (this.isActive) {
-      void this.communicator.sendBroadcast(this.pollPacket.encode());
+      const packet = this.pollPacket.encode();
+      void this.communicator.sendBroadcast(packet);
       this.pollTimer = setTimeout(this.discoveryLoop, this.pollingInterval);
     }
   }

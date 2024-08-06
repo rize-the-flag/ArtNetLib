@@ -1,11 +1,11 @@
-import {ProtocolVersion, valueOf} from '../types';
+import {valueOf} from '../types';
 import {
   ARTPOLL_REPLY_SEND_POLICY,
   DIAG_PRIORITY,
   DIAGNOSTICS_MESSAGE_POLICY,
-  OP_CODE,
-} from './constants';
-import {GPacketSchema} from '@rtf-dm/protocol';
+  OP_CODE, PROTOCOL_VERSION,
+} from '../constants';
+import {PacketSchemaPublic} from '@rtf-dm/protocol';
 
 export type HeaderPayload = {
   ID: string;
@@ -47,7 +47,7 @@ export type PollReplyPacketPayload = {
 };
 
 export type DmxPacketPayload = {
-  protoVersion: ProtocolVersion;
+  protoVersion: typeof PROTOCOL_VERSION;
   sequence: number;
   physical: number;
   net: number;
@@ -57,13 +57,13 @@ export type DmxPacketPayload = {
 };
 
 export type SyncPacketPayload = {
-  protoVersion: ProtocolVersion;
+  protoVersion: typeof PROTOCOL_VERSION;
   aux1: number;
   aux2: number;
 };
 
 export type PollPacketPayload = {
-  protoVersion: ProtocolVersion;
+  protoVersion: typeof PROTOCOL_VERSION;
   flags: number;
   diagPriority: number;
   targetPortAddressTop: number;
@@ -71,7 +71,7 @@ export type PollPacketPayload = {
 };
 
 export type DiagDataPayload = {
-  protoVersion: number;
+  protoVersion: typeof PROTOCOL_VERSION;
   filler1: number;
   diagPriority: number;
   logicalPort: number;
@@ -81,7 +81,7 @@ export type DiagDataPayload = {
 };
 
 export type AddressPacketPayload = {
-  protoVersion: number;
+  protoVersion: typeof PROTOCOL_VERSION;
   netSwitch: number;
   bindIndex: number;
   shortName: string;
@@ -94,13 +94,13 @@ export type AddressPacketPayload = {
 };
 
 
-export type PollPacketSchema = GPacketSchema<PollPacketPayload>;
-export type DmxPacketSchema = GPacketSchema<DmxPacketPayload>;
-export type PollReplyPacketSchema = GPacketSchema<PollReplyPacketPayload>;
-export type HeaderSchema = GPacketSchema<HeaderPayload>;
-export type SyncPacketSchema = GPacketSchema<SyncPacketPayload>;
-export type DiagDataPacketSchema = GPacketSchema<DiagDataPayload>;
-export type AddressPacketSchema = GPacketSchema<AddressPacketPayload>;
+export type PollPacketSchema = PacketSchemaPublic<PollPacketPayload>;
+export type DmxPacketSchema = PacketSchemaPublic<DmxPacketPayload>;
+export type PollReplyPacketSchema = PacketSchemaPublic<PollReplyPacketPayload>;
+export type HeaderSchema = PacketSchemaPublic<HeaderPayload>;
+export type SyncPacketSchema = PacketSchemaPublic<SyncPacketPayload>;
+export type DiagDataPacketSchema = PacketSchemaPublic<DiagDataPayload>;
+export type AddressPacketSchema = PacketSchemaPublic<AddressPacketPayload>;
 
 export type OpCode = valueOf<typeof OP_CODE>;
 export type DiagPriority = keyof typeof DIAG_PRIORITY;

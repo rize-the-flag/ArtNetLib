@@ -7,10 +7,7 @@ export type PacketSchemaRecord = {
 
 export type PacketPayloadType = string | number | number[] | bigint;
 
-export type PacketPayload = {
-	[field: string]: PacketPayloadType;
-};
+export type PacketPayload = Record<string, PacketPayloadType>;
 
-export type GPacketSchema<TPayload> = {
-	[TKey in keyof TPayload]: PacketSchemaRecord;
-};
+export type PacketSchemaFromPayload<TPayload> = Map<keyof TPayload, PacketSchemaRecord>;
+export type PacketSchemaPublic<TPayload> = Array<[keyof TPayload, PacketSchemaRecord]>

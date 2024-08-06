@@ -1,6 +1,6 @@
-import {DmxPacket} from '../packets/dmx-packet';
 import {ThrowsException} from '../types';
 import {SupportedDevices} from "./common/device-contracts";
+import {DmxPacket} from "@rtf-dm/artnet-packets";
 
 export interface ArtNetDeviceAction {
     actionName: string;

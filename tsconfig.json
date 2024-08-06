@@ -9,14 +9,12 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
+    "sourceMap": false,
     "baseUrl": "./",
   },
   "paths": {
     "@packages/*": [
       "./packages/*"
-    ],
-    "@apps/*": [
-      "./applications/*"
     ]
   },
   "exclude": [

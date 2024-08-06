@@ -1,3 +1,7 @@
+export const PROTOCOL_VERSION = 14;
+export const ARTNET_PACKET_ID = 'Art-Net';
+export const ARTNET_PORT = 6454;
+
 export const OP_CODE = {
 	POLL: 0x2000,
 	POLL_REPLY: 0x2100,

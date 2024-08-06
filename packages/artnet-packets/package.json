@@ -1,17 +1,19 @@
 {
-  "name": "@rtf-dm/typed-emitter",
-  "version": "0.0.2",
-  "type": "commonjs",
-  "description": "simple and very strong typed event emitter with additional functionalities",
+  "name": "@rtf-dm/artnet-packets",
+  "version": "0.0.1",
+  "description": "ArtNet packets package for protocol version 14",
   "main": "build/index.js",
   "types": "build/types",
+  "devDependencies": {},
   "scripts": {
     "build": "tsc --build",
-    "lint": "eslint",
     "cleanup": "tsc --build --clean"
   },
   "author": "Rize-The-Flag",
   "license": "MIT",
+  "dependencies": {
+    "@rtf-dm/protocol": "^0.2.0"
+  },
   "files": [
     "build"
   ]

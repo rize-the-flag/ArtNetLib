@@ -1,4 +1,5 @@
 import {ArtNetImpl} from './index';
+import {DmxPacket} from "@rtf-dm/artnet-packets";
 
 (async () => {
   const artnet = new ArtNetImpl({

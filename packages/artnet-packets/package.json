@@ -4,6 +4,11 @@
   "description": "ArtNet packets package for protocol version 14",
   "main": "build/index.js",
   "types": "build/types",
+  "keywords": [
+    "ArtNet",
+    "DMX",
+    "DMX512"
+  ],
   "devDependencies": {},
   "scripts": {
     "build": "tsc --build",
@@ -16,5 +21,9 @@
   },
   "files": [
     "build"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:rize-the-flag/ArtNetLib.git"
+  }
 }

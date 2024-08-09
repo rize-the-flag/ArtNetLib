@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/common",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Decorators library",
   "main": "build/index.js",
   "types": "build/types",
@@ -26,5 +26,9 @@
   },
   "files": [
     "build"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:rize-the-flag/ArtNetLib.git"
+  }
 }

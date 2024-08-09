@@ -1,7 +1,8 @@
 import {ArtNetPacket} from './common/art-net-packet';
-import {AddressPacketSchema, AddressPacketPayload} from './common/packet.interface';
+import {AddressPacketSchema, AddressPacketPayload, HeaderPayload} from './common/packet.interface';
 import {PROTOCOL_VERSION} from './constants';
 import {OP_CODE} from './constants';
+import * as Buffer from "node:buffer";
 
 
 
@@ -43,7 +44,7 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
         );
     }
 
-    public applyPortsConfig(): AddressPacket {
+    public applyPortsConfig(): this {
         this.payload.netSwitch |= 0x80;
         this.payload.netSubSwitch |= 0x80;
         this.payload.swOut = this.payload.swOut.map(x => x | 0x80);
@@ -51,7 +52,7 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
         return this;
     }
 
-    public resetToPhysicalPortsConfig(): AddressPacket {
+    public resetToPhysicalPortsConfig(): this {
         this.payload.netSwitch &= 0x7F;
         this.payload.netSubSwitch &= 0x7F;
         this.payload.swOut = this.payload.swOut.map(x => x & 0x7F);

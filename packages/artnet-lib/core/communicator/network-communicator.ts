@@ -65,7 +65,7 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
     const listenEvent = new Promise<void>((resolve) =>
       this.socket.on('listening', () => {
         this.logger.info(
-          `Starting listen ArtNet packages on ${this.broadcastIpAddress}:${this.networkConfig.port}`,
+          `Starting listen ArtNet packages on ${this.broadcastIpAddress}:${String(this.networkConfig.port)}`,
         );
         resolve();
       }),
@@ -83,7 +83,7 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
 
     this.socket.unref();
 
-    return await listenEvent;
+    await listenEvent;
   }
 
   @Log
@@ -117,7 +117,7 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
     await this.dispose();
     await this.init();
 
-    this.logger.warn(`Network changed to ${networkIp}:${port}/${networkMask}/`);
+    this.logger.warn(`Network changed to ${networkIp}:${String(port)}/${networkMask}/`);
 
     return this.broadcastIpAddress;
   }

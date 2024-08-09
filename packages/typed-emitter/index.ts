@@ -2,10 +2,10 @@ import { EventHandlers } from './types';
 import { MAX_LISTENERS_PER_EVENT } from './constants';
 
 export class TypedEmitter<TEvents extends EventHandlers> {
-	private listeners: Map<keyof TEvents, Set<TEvents[keyof TEvents]>> = new Map();
+	private listeners = new Map<keyof TEvents, Set<TEvents[keyof TEvents]>>();
 	private asyncListeners = new Map<
 		keyof EventHandlers,
-		Array<(value: Parameters<TEvents[keyof TEvents]>) => void>
+		((value: Parameters<TEvents[keyof TEvents]>) => void)[]
 	>();
 
 	constructor(private maxListenerPerEvent: number = MAX_LISTENERS_PER_EVENT) {}
@@ -17,11 +17,10 @@ export class TypedEmitter<TEvents extends EventHandlers> {
 		if (!this.listeners.has(event)) this.listeners.set(event, new Set());
 		const handlers = this.listeners.get(event);
 
-		if (handlers!.size >= this.maxListenerPerEvent)
+		if (handlers && handlers.size >= this.maxListenerPerEvent)
 			throw new Error(`Listener count for event [${String(event)}] exceeds threshold ${
-				this.maxListenerPerEvent
-			}
-             possible memory leak detected`);
+				String(this.maxListenerPerEvent)
+			} possible memory leak detected`);
 
 		handlers?.add(cb);
 	}
@@ -40,21 +39,21 @@ export class TypedEmitter<TEvents extends EventHandlers> {
 		const currentListeners = this.listeners.get(event);
 		if (currentListeners) {
 			currentListeners.forEach((listener) => {
-				listener(...payload);
+				void listener(...payload);
 				return;
 			});
 		}
 
 		const asyncListeners = this.asyncListeners.get(event);
 		if (asyncListeners) {
-			asyncListeners.forEach((resolve) => resolve(payload));
+			asyncListeners.forEach((resolve) => { resolve(payload); });
 			asyncListeners.length = 0;
 		}
 	}
 
 	public once<TEventName extends keyof TEvents>(event: TEventName, cb: TEvents[TEventName]): void {
 		const wrap = (...payload: Parameters<TEvents[TEventName]>): void | Promise<void> => {
-			cb(...payload);
+			void cb(...payload);
 			this.removeListener(event, wrap as TEvents[TEventName]);
 		};
 
@@ -68,11 +67,14 @@ export class TypedEmitter<TEvents extends EventHandlers> {
 		return new Promise((resolve, reject) => {
 			if (!this.asyncListeners.has(event)) this.asyncListeners.set(event, []);
 			this.asyncListeners.get(event)?.push(resolve);
-			signal && (signal.onabort = () => reject(signal.reason))
+			if (signal) {
+				// eslint-disable-next-line
+				(signal.onabort = () => reject(new Error(signal.reason)))
+			}
 		});
 	}
 
-	public waitForAll<TEventName extends keyof TEvents>(events: TEventName[]): Array<Promise<Parameters<TEvents[TEventName]>>> {
+	public waitForAll<TEventName extends keyof TEvents>(events: TEventName[]): Promise<Parameters<TEvents[TEventName]>>[] {
 		return events.map((event) => this.waitFor<TEventName>(event));
 	}
 	

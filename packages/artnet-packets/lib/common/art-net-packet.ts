@@ -37,8 +37,8 @@ export abstract class ArtNetPacket<
     };
 
     static getHeaderLength(): number | undefined {
-        const ID = headerSchema[0][1]['length'];
-        const opCode = headerSchema[1][1]['length']
+        const ID = headerSchema[0][1].length;
+        const opCode = headerSchema[1][1].length
         if (!ID || !opCode) throw new Error('ID or opCode wasn\'t found in header');
         return ID + opCode;
     }

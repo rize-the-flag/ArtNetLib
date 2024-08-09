@@ -13,7 +13,7 @@ export class Discovery {
 
   accessor sendArtPollReply: boolean;
 
-  private isActive: boolean = false;
+  private isActive = false;
   private pollTimer: NodeJS.Timer;
   private pollingInterval: number = DEFAULT_POLL_INTERVAL;
 
@@ -50,7 +50,7 @@ export class Discovery {
   }
 
   public updateReplyInfo(): void {
-    return this.setReplyInfo();
+    this.setReplyInfo();
   }
 
   private discoveryLoop = () => {
@@ -83,12 +83,12 @@ export class Discovery {
     return this.isActive ? 'RUNNING' : 'SUSPENDED';
   }
 
-  private handleArtPoll = async (data: Buffer, {address, port}: RemoteInfo): Promise<void> => {
+  private handleArtPoll =  (data: Buffer, {address, port}: RemoteInfo): void => {
     if (!PollPacket.is(data) || !this.sendArtPollReply) return;
 
     this.logger.warn('ArtPoll handling for debug purposes only, disable after debug completed');
     this.logger.info(`Received ArtPoll packet from ${address}`);
-    this.logger.info(`Response with ArtPollReply packet to ${address}:${port}`);
+    this.logger.info(`Response with ArtPollReply packet to ${address}:${String(port)}`);
 
     void this.communicator.send(this.pollReplyPacket.encode(), address);
   };

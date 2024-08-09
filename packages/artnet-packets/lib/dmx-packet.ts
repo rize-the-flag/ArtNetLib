@@ -76,10 +76,10 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
 
 	public setChannels(data: number[]): ThrowsException<void> {
 		if (data.some((value) => value > DmxPacket.DMX_VALUE_MAX)) {
-			throw new Error(`DMX channel out of range max is ${DmxPacket.DMX_VALUE_MAX}` );
+			throw new Error(`DMX channel out of range max is ${String(DmxPacket.DMX_VALUE_MAX)}` );
 		}
 		if (data.length > DmxPacket.DMX_CHANNEL_MAX) {
-			throw new Error(`DMX Channel MAX is ${DmxPacket.DMX_CHANNEL_MAX}`);
+			throw new Error(`DMX Channel MAX is ${String(DmxPacket.DMX_CHANNEL_MAX)}`);
 		}
 
 		this.payload.dmxData = [...data];

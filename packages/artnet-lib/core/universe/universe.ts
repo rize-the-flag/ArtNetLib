@@ -14,7 +14,7 @@ export class Universe {
     constructor(
         name: string,
         controlPacket?: DeviceControlPacket,
-        maxDMXLength: number = 512
+        maxDMXLength = 512
     ) {
         this.controlPacket =  controlPacket ?? new DmxPacket({
             length: maxDMXLength

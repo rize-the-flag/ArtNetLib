@@ -4,9 +4,7 @@ import {DmxPacket} from "@rtf-dm/artnet-packets";
 
 export interface ArtNetDeviceAction {
     actionName: string;
-    parameters: {
-        [param: string]: string | number | number[];
-    };
+    parameters: Record<string, string | number | number[]>;
 }
 
 export interface ArtNetDevice {
@@ -31,7 +29,7 @@ export interface DeviceApiValidationError {
     instance: string;
 }
 
-export type DeviceConstructorArgs = {
+export interface DeviceConstructorArgs {
     deviceDriver: keyof SupportedDevices,
     numChannels?: number
 }

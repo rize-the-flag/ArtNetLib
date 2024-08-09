@@ -10,20 +10,20 @@ export abstract class Device implements ArtNetDevice {
 	protected readonly dxmData: number[];
 	protected readonly api: ZodSchema;
 
-	protected constructor(dmxDataSize: number = 512, api: ZodSchema) {
-		this.dxmData = new Array(dmxDataSize).fill(0);
+	protected constructor(dmxDataSize = 512, api: ZodSchema) {
+		this.dxmData = new Array<number>(dmxDataSize).fill(0);
 		this.api = api;
 	}
 
-	protected setChannel(channel: number, value: number) {
+	protected setChannel(channel: number, value: number): ThrowsException<this> {
 		if (channel > this.getDmxDataSize() - 1) {
 			// FIXME: throw ArtNetLib error
 			throw new Error(
-				`Channel ${channel} exceeds max device channel ${this.getDmxDataSize() - 1} `,
+				`Channel ${String(channel)} exceeds max device channel ${String(this.getDmxDataSize() - 1)} `,
 			);
 		}
 		this.dxmData[channel] = Math.max(0, Math.min(value, 255));
-		this.logger.info(`setChannel(${channel} => ${this.dxmData[channel]})`);
+		this.logger.info(`setChannel(${String(channel)} => ${String(this.dxmData[channel])})`);
 		return this;
 	}
 

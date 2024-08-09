@@ -8,12 +8,12 @@ export type NodeStatusPayload = {
     lastResponseTime: Date;
     portInfo: NodeInfo;
     isAlive: boolean;
-};
+}
 
 
 export type NodeManagerEvents = {
     NODE_STATUS_UPDATED: GEventHandler<NodeStatusPayload>;
     NEW_NODE_REGISTERED: GEventHandler<NodeStatusPayload>;
     NODE_IS_DEAD: GEventHandler<NodeStatusPayload>;
-};
+}
 

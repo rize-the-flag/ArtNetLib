@@ -1,5 +1,4 @@
-import {PacketSchemaRecord, PacketPayload, PacketSchemaFromPayload} from '../types';
-import * as assert from "assert";
+import {PacketSchemaRecord, PacketPayload} from '../types';
 import {Schema} from "../schema/schema";
 
 
@@ -15,8 +14,7 @@ function writeNumberToBuffer(
     offset: number,
 ): void {
     if (schemaRecord.length == 2) {
-        schemaRecord.byteOrder === 'LE'
-            ? buffer.writeUInt16LE(numberValue, offset)
+        schemaRecord.byteOrder === 'LE' ? buffer.writeUInt16LE(numberValue, offset)
             : buffer.writeUInt16BE(numberValue, offset);
     } else if (schemaRecord.length == 4) {
         schemaRecord.byteOrder === 'LE'

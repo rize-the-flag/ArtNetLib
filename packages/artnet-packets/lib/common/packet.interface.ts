@@ -5,12 +5,12 @@ import {
   DIAGNOSTICS_MESSAGE_POLICY,
   OP_CODE, PROTOCOL_VERSION,
 } from '../constants';
-import {PacketSchemaPublic} from '@rtf-dm/protocol';
+import {PacketPayload, PacketSchemaPublic} from '@rtf-dm/protocol';
 
 export type HeaderPayload = {
   ID: string;
   opCode: number;
-};
+}
 
 export type PollReplyPacketPayload = {
   ipAddress: number[];
@@ -44,7 +44,7 @@ export type PollReplyPacketPayload = {
   status3: number;
   defaultRespUID: number[];
   filler: number[];
-};
+}
 
 export type DmxPacketPayload = {
   protoVersion: typeof PROTOCOL_VERSION;
@@ -54,13 +54,13 @@ export type DmxPacketPayload = {
   subNet: number;
   length: number;
   dmxData: number[];
-};
+}
 
 export type SyncPacketPayload = {
   protoVersion: typeof PROTOCOL_VERSION;
   aux1: number;
   aux2: number;
-};
+}
 
 export type PollPacketPayload = {
   protoVersion: typeof PROTOCOL_VERSION;
@@ -68,7 +68,7 @@ export type PollPacketPayload = {
   diagPriority: number;
   targetPortAddressTop: number;
   targetPortAddressBottom: number;
-};
+}
 
 export type DiagDataPayload = {
   protoVersion: typeof PROTOCOL_VERSION;
@@ -78,7 +78,7 @@ export type DiagDataPayload = {
   filler3: number;
   length: number;
   data: string;
-};
+}
 
 export type AddressPacketPayload = {
   protoVersion: typeof PROTOCOL_VERSION;
@@ -91,8 +91,7 @@ export type AddressPacketPayload = {
   netSubSwitch: number;
   swVideo: number; // deprecated
   command: number;
-};
-
+}
 
 export type PollPacketSchema = PacketSchemaPublic<PollPacketPayload>;
 export type DmxPacketSchema = PacketSchemaPublic<DmxPacketPayload>;

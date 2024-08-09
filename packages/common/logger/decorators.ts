@@ -5,20 +5,20 @@ interface LoggerDecoratorOptions<TLogger> {
 }
 
 export function LogMethod<TLogger>(logger: TLogger, {severity, measurePerformance}: LoggerDecoratorOptions<typeof logger>) {
-    return function <This, Args extends any[], Return>(
+    return function <This, Args extends unknown[], Return>(
         value: (this: This, ...args: Args) => Return,
         context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
     )  {
         return function (this: This, ...args: Args): Return {
             const {name} = context;
             const logMethod = logger[severity];
-            let measurement: string = '';
+            let measurement = '';
 
             if(typeof logMethod !== 'function') {
-                throw new TypeError(`${logger}[${String(severity)}] mast be callable`);
+                throw new TypeError(`${String(logger)}[${String(severity)}] mast be callable`);
             }
 
-            logMethod.call(logger, `${String(name)}(${args})`);
+            logMethod.call(logger, `${String(name)}(${String(args)})`);
 
             measurePerformance && performance.mark(`${String(name)}-start`);
             const RetVal = value.call(this, ...args);
@@ -26,10 +26,10 @@ export function LogMethod<TLogger>(logger: TLogger, {severity, measurePerformanc
 
             if (measurePerformance) {
                 const { duration} = performance.measure(String(name), `${String(name)}-start`, `${String(name)}-end`);
-                measurement = `Duration: ${duration}ms`
+                measurement = `Duration: ${String(duration)}ms`
             }
 
-            logMethod.call(logger, `${String(name)}(${args}) => ${RetVal} ${measurement}`);
+            logMethod.call(logger, `${String(name)}(${String(args)}) => ${String(RetVal)} ${measurement}`);
             return RetVal;
         }
     }

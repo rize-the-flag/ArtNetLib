@@ -7,7 +7,7 @@ const LOG_LEVEL = {
 	TRACE: 1
 }
 
-const LEVEL = parseInt(process.env.LOG_LEVEL || '') ?? LOG_LEVEL.INFO;
+const LEVEL = Boolean(parseInt(process.env.LOG_LEVEL || '')) || LOG_LEVEL.INFO;
 
 export const loggerConfig = {
 	name: 'ArtNet-Lib',

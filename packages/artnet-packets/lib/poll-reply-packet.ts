@@ -38,7 +38,7 @@ export class PollReplyPacket extends ArtNetPacket<PollReplyPacketPayload> {
 			goodOutputB: 0,
 			status3: 0,
 			defaultRespUID: [0, 0, 0, 0, 0, 0],
-			filler: new Array(15).fill(0),
+			filler: new Array<number>(15).fill(0),
 			...payload
 		}
 

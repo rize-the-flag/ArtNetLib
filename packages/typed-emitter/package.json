@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/typed-emitter",
-  "version": "0.0.2",
+  "version": "0.1.2",
   "type": "commonjs",
   "description": "simple and very strong typed event emitter with additional functionalities",
   "main": "build/index.js",
@@ -14,5 +14,9 @@
   "license": "MIT",
   "files": [
     "build"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:rize-the-flag/ArtNetLib.git"
+  }
 }

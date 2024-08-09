@@ -63,7 +63,7 @@ export interface ArtNet {
 
   setGroupAction(payload: UniverseAction): Universe | null;
 
-  broadcastUniverse(universeAction: UniverseAction): Promise<any>;
+  broadcastUniverse(universeAction: UniverseAction): Promise<number>;
 
   multicastUniverse(universeAction: UniverseAction): Promise<number[][]>;
 

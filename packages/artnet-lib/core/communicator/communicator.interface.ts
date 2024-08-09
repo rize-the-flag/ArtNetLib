@@ -6,7 +6,7 @@ import {NetworkConfig} from '../types';
 
 export type CommunicatorEvents = {
   UDP_PACKET: GEventHandler<[Buffer, RemoteInfo]>;
-};
+}
 
 
 export interface Communicator extends Emitter<CommunicatorEvents> {

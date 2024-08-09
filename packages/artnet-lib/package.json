@@ -1,6 +1,6 @@
 {
 	"name": "@rtf-dm/artnet-lib",
-	"version": "1.4.2",
+	"version": "1.4.3",
 	"description": "ArtNet library",
 	"main": "build/index.js",
 	"types": "build/types",
@@ -21,8 +21,8 @@
 	"license": "MIT",
 	"dependencies": {
 		"@rtf-dm/artnet-packets": "^0.0.1",
-		"@rtf-dm/common": "^0.0.1",
-		"@rtf-dm/typed-emitter": "^0.0.2",
+		"@rtf-dm/common": "^0.1.1",
+		"@rtf-dm/typed-emitter": "^0.1.2",
 		"tslog": "^4.9.2",
 		"zod": "^3.22.4"
 	},
@@ -38,5 +38,9 @@
 		"build",
 		"artistic_license_logo.png",
 		"example.ts"
-	]
+	],
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:rize-the-flag/ArtNetLib.git"
+	}
 }

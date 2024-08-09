@@ -8,7 +8,7 @@ export class Node {
     private networkCommunicator: Communicator;
     private pollReplyPayload: PollReplyPacketPayload;
     private _lastResponseTime: Date;
-    private ports: Map<number, Universe> = new Map();
+    private ports = new Map<number, Universe>();
 
     accessor isAlive = false;
     constructor(pollReplyPayload: PollReplyPacketPayload, communicator: Communicator) {
@@ -45,7 +45,7 @@ export class Node {
     }
 
     // Node has 4 ports each port has one Universe each Universe has many Devices
-    public update(polReplyPayload: PollReplyPacketPayload): Node {
+    public update(polReplyPayload: PollReplyPacketPayload): this {
         this._lastResponseTime = new Date();
         this.pollReplyPayload = {...polReplyPayload};
         return this;
@@ -75,7 +75,7 @@ export class Node {
         if (portNumber >= this.getNodeInfo().numPorts) {
             throw new ArtNetLibError(
                 'NODE_PORTS_LIMIT',
-                `Node ${this.name} supports ${this.getNodeInfo().numPorts} port(s) only`,
+                `Node ${this.name} supports ${String(this.getNodeInfo().numPorts)} port(s) only`,
             );
         }
     }
@@ -111,8 +111,8 @@ export class Node {
             return this.networkCommunicator.send(universeOrPort.buildDmxData(), this.ipAddress);
         }
         this.updateUniverseAddressInfo([universeOrPort]);
-        const verse = this.ports.get(universeOrPort)!;
-        if(!verse) return Promise.reject(`No universe on port ${universeOrPort}`)
+        const verse = this.ports.get(universeOrPort);
+        if(!verse) return Promise.reject(new Error(`No universe on port ${String(universeOrPort)}`))
         return this.networkCommunicator.send(verse.buildDmxData(), this.ipAddress);
     }
 

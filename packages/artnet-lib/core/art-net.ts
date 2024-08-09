@@ -153,10 +153,12 @@ export class ArtNetImpl {
   public addDevice(universeName: string, device: DeviceConstructorArgs): ThrowsException<number | null> {
     if (this.isUniverseExist(universeName)) return null;
 
-    const deviceInstance = this.createDevices([device]).pop()!;
-    const universe = this.getUniverseByName(universeName)!;
-
-    return universe.add(deviceInstance);
+    const deviceInstance = this.createDevices([device]).pop();
+    const universe = this.getUniverseByName(universeName);
+    if (deviceInstance && universe) {
+      return universe.add(deviceInstance);
+    }
+    return null;
   }
 
   /**
@@ -166,10 +168,10 @@ export class ArtNetImpl {
    * @param {DeviceConstructorArgs} device
    * @return {{deviceInstance: Generic | MixPanel150, Universe: Universe} | null}
    */
-  public setDevice(universeName: string, deviceIndex: number, device: DeviceConstructorArgs): ThrowsException<void | null> {
+  public setDevice(universeName: string, deviceIndex: number, device: DeviceConstructorArgs): ThrowsException<undefined | null> {
     const universe = this.getUniverseByName(universeName);
-    const deviceInstance = this.createDevices([device]).pop()!;
-    if (!universe) return null;
+    const deviceInstance = this.createDevices([device]).pop();
+    if (!universe || !deviceInstance) return null;
     universe.setDevice(deviceInstance, deviceIndex);
   }
 

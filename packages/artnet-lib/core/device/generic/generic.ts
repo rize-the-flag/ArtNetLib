@@ -6,7 +6,7 @@ import {z} from 'zod';
 import {Log} from "../../logger";
 
 export class Generic extends Device {
-    constructor(dmxDataLength: number = 512) {
+    constructor(dmxDataLength = 512) {
         super(dmxDataLength, API);
     }
 
@@ -25,11 +25,11 @@ export class Generic extends Device {
         return this;
     }
 
-    public setAction(action: ArtNetDeviceAction): ThrowsException<this | void> {
+    public setAction(action: ArtNetDeviceAction): ThrowsException<void> {
         this.validate(action);
 
-        if (this.is(setChannelsApi, action)) return this.setChannels(action.parameters);
-        if (this.is(setChannelApi, action)) return super.setChannel(action.parameters.channel, action.parameters.value);
+        if (this.is(setChannelsApi, action)) this.setChannels(action.parameters);
+        if (this.is(setChannelApi, action))  super.setChannel(action.parameters.channel, action.parameters.value);
     }
 
     public setActions(actions: ArtNetDeviceAction[]): ThrowsException<void> {

@@ -1,7 +1,7 @@
 import {ArtNetImpl} from './index';
 import {DmxPacket} from "@rtf-dm/artnet-packets";
 
-(async () => {
+void (async () => {
   const artnet = new ArtNetImpl({
     discovery: {
       sendReply: true,
@@ -20,16 +20,16 @@ import {DmxPacket} from "@rtf-dm/artnet-packets";
   const [node1] = await artnet.nodeManager.waitFor('NEW_NODE_REGISTERED');
 
   // Each time when node status or settings changed, 'NODE_STATUS_UPDATED' event fired
-  artnet.nodeManager.addListener('NODE_STATUS_UPDATED', payload => console.log(`node updated: ${payload.name}`));
+  artnet.nodeManager.addListener('NODE_STATUS_UPDATED', payload => { console.log(`node updated: ${payload.name}`); });
 
   // When node didn't response with poll reply for some time, it marked as dead and 'NODE_IS_DEAD' event fired;
-  artnet.nodeManager.addListener('NODE_IS_DEAD', payload => console.log(`node dead: ${payload.name}`));
+  artnet.nodeManager.addListener('NODE_IS_DEAD', payload => { console.log(`node dead: ${payload.name}`); });
 
-  await new Promise(resolve => setTimeout(() => resolve(1), 5000)); //Timeout to get node updated event
+  await new Promise(resolve => setTimeout(() => { resolve(1); }, 5000)); //Timeout to get node updated event
 
   artnet.discovery.sendArtPollReply = false; //disable reply on poll to demonstrate node dead event;
 
-  await new Promise(resolve => setTimeout(() => resolve(1), 10000)); //Timeout to get node dead event
+  await new Promise(resolve => setTimeout(() => { resolve(1); }, 10000)); //Timeout to get node dead event
 
   artnet.discovery.sendArtPollReply = true;
 
@@ -78,10 +78,12 @@ import {DmxPacket} from "@rtf-dm/artnet-packets";
   // Use this api only for detached universes. Since for controlled universes this doesn't make sense
   const sentBytes = await artnet.sendBroadcast(verse);
 
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`${sentBytes} bytes was sent`);
 
   //Send all attached universes of all nodes and all ports
   const sentBytesArray = await artnet.nodeManager.syncAllNodes();
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`${sentBytesArray} bytes was sent`);
 
   await artnet.dispose();
@@ -95,7 +97,7 @@ import {DmxPacket} from "@rtf-dm/artnet-packets";
 
   await artNet.init();
 
-  artNet.nodeManager.waitFor('NEW_NODE_REGISTERED').then(async ([nodeInfo]) => {
+  void artNet.nodeManager.waitFor('NEW_NODE_REGISTERED').then(async ([nodeInfo]) => {
 
     artNet.createUniverse('my_universe', [{
       deviceDriver: 'Generic', numChannels: 10,

@@ -1,5 +1,5 @@
-export type AnyDMX512DeviceApi = {
+export interface AnyDMX512DeviceApi {
 	setChannels: {
 		channels: number[];
 	};
-};
+}

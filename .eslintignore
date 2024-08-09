@@ -2,3 +2,4 @@
 **/*.http
 **/*.tsbuildinfo
 **/*.map
+*.d.ts

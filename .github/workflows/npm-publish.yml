@@ -17,8 +17,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 21
-      - name: Installing npm packages
+      - name: Installing monorepo npm packages
         run: npm install --workspace=packages
+      - name: Installing other npm packages
+        run: npm install
       - name: Linting
         run: npm run lint
       - name: Building ArtNet

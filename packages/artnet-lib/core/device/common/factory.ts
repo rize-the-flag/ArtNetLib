@@ -1,4 +1,3 @@
-
 import {DEVICE_TYPE, SupportedDevices} from "./device-contracts";
 
 

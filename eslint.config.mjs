@@ -3,8 +3,8 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
     eslint.configs.recommended,
-    ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.recommendedTypeChecked,
+    ...tseslint.configs.stylisticTypeChecked,
     {
         languageOptions: {
             parserOptions: {
@@ -12,20 +12,21 @@ export default tseslint.config(
                 tsconfigRootDir: import.meta.dirname,
                 project: ['./tsconfig.json', './packages/*/tsconfig.json'],
             }
-        }
-    },
-    {
-        files: ['./**/*.d.ts', './**/build/*', './**/*.js'],
-        ...tseslint.configs.disableTypeChecked,
-    },
-    {
+        },
         rules: {
             '@typescript-eslint/no-unnecessary-type-parameters': 'off',
             '@typescript-eslint/no-unused-vars': 'off',
             'no-undef': 'off',
-            '@typescript-eslint/no-unused-expressions': 'warn',
-            '@typescript-eslint/unified-signatures': 'warn'
+            '@typescript-eslint/no-unused-expressions': 'off',
+            '@typescript-eslint/unified-signatures': 'warn',
+            '@typescript-eslint/array-type': 'off',
+            '@typescript-eslint/consistent-type-definitions': 'off',
+            '@typescript-eslint/no-redundant-type-constituents': 'off',
+            '@typescript-eslint/consistent-generic-constructors': 'off'
         }
+    },
+    {
+        ignores: ['**/*.d.ts', '**/build/**', '**/*.js']
     }
 )
 

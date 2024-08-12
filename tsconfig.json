@@ -18,6 +18,7 @@
   },
   "exclude": [
     "./build",
-    "./dist"
+    "./dist",
+    "./eslint.config.mjs"
   ]
 }

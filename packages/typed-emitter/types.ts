@@ -1,7 +1,7 @@
 type ObjectKeys = string | symbol | number;
 
 
-export type EventHandlers = Record<ObjectKeys, (...args: any[]) => void | Promise<void>>;
+export type EventHandlers = Record<ObjectKeys, (...args: unknown[]) => void | Promise<void>>;
 
 export type EventHandler<TArg> = TArg extends Array<unknown>
 	? (...arg: [...TArg]) => void | Promise<void>

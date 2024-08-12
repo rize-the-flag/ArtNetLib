@@ -107,7 +107,7 @@ export class NodeManager extends TypedEmitter<NodeManagerEvents> {
      * @return {Node}
      */
     public addOrUpdateNode(polReplyPayload: PollReplyPacketPayload): Node {
-        return this.updateNode(polReplyPayload) || this.addNode(polReplyPayload);
+        return this.updateNode(polReplyPayload) ?? this.addNode(polReplyPayload);
     }
 
     /**

@@ -102,10 +102,6 @@ export class Node {
         };
     }
 
-
-    public async syncRemotePort(universe: Universe): Promise<number>;
-
-    public async syncRemotePort(port: number): Promise<number>;
     public async syncRemotePort(universeOrPort: Universe | number): Promise<number> {
         if (universeOrPort instanceof Universe) {
             return this.networkCommunicator.send(universeOrPort.buildDmxData(), this.ipAddress);
@@ -125,15 +121,13 @@ export class Node {
         );
     }
 
-    public getUniverse(port: number): Universe | undefined;
-    public getUniverse(name: string): Universe | undefined;
-    public getUniverse(portOrName: string | number): Universe | undefined {
-        if (typeof portOrName === 'string') {
+    public getUniverse(nameOrPort: string | number): Universe | undefined {
+        if (typeof nameOrPort === 'string') {
             return Array.from(this.ports.values()).find((universe) => universe.name);
         }
 
-        this.assertPortsCount(portOrName);
-        return this.ports.get(portOrName);
+        this.assertPortsCount(nameOrPort);
+        return this.ports.get(nameOrPort);
     }
 
     public async configure(config: Partial<AddressPacketPayload>): Promise<number> {

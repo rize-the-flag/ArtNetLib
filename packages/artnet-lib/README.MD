@@ -331,7 +331,7 @@ await artNet.nodeManager.getByMac(nodeInfo.macAddress)?.configure({
 #### VER 1.5.16
 
 - Move artnet packets to separate package @rtf-dm/artnet-packets
-  - Added create() method to each packet 
+  - Added create() method to each packet
 - Different fixes in types
 
 #### VER 1.2.0

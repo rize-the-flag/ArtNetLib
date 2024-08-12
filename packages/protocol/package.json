@@ -4,7 +4,6 @@
   "description": "package for creating packet level protocol description",
   "main": "build/index.js",
   "types": "build/types",
-  "devDependencies": {},
   "scripts": {
     "build": "tsc --build",
     "cleanup": "tsc --build --clean"
@@ -17,5 +16,6 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:rize-the-flag/ArtNetLib.git"
-  }
+  },
+  "dependencies": {}
 }

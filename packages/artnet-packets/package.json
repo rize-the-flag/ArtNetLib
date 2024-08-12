@@ -9,7 +9,6 @@
     "DMX",
     "DMX512"
   ],
-  "devDependencies": {},
   "scripts": {
     "build": "tsc --build",
     "cleanup": "tsc --build --clean"

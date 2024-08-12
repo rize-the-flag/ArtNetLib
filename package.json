@@ -1,9 +1,8 @@
 {
   "scripts": {
     "build": "npm run build --workspace=packages",
-    "lint": "eslint packages/**/*.ts",
-    "lint:fix": "eslint packages/**/*.ts --fix",
-    "cleanup": "tsc --build --clean"
+    "lint": "prettier . --write && npx eslint . --fix",
+    "cleanup": "npm run cleanup --workspace=packages"
   },
   "keywords": [],
   "author": "Rize-The-Flag",
@@ -19,6 +18,8 @@
     "@eslint/js": "^9.9.0",
     "@types/eslint__js": "^8.42.3",
     "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "3.3.3",
     "process": "^0.11.10",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.0.1"

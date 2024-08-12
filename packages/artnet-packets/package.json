@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/artnet-packets",
-  "version": "0.0.1",
+  "version": "0.0.11",
   "description": "ArtNet packets package for protocol version 14",
   "main": "build/index.js",
   "types": "build/types",
@@ -17,7 +17,7 @@
   "author": "Rize-The-Flag",
   "license": "MIT",
   "dependencies": {
-    "@rtf-dm/protocol": "^0.2.0"
+    "@rtf-dm/protocol": "^0.3.1"
   },
   "files": [
     "build"

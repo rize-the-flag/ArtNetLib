@@ -1,12 +1,12 @@
-import {DEFAULT_POLL_INTERVAL} from '../constants';
-import {RemoteInfo} from 'dgram';
-import {InjectLogger} from '../logger';
-import {clearInterval} from 'timers';
-import {DiscoveryStatus} from './discovery.interface';
-import {Communicator} from '../communicator/communicator.interface';
-import {NodeManager} from '../node/node-manager';
-import {LoggerInterface} from '../logger/logger.interface';
-import {PollPacket, PollReplyPacket, PollReplyPacketPayload} from "@rtf-dm/artnet-packets";
+import { DEFAULT_POLL_INTERVAL } from '../constants';
+import { RemoteInfo } from 'dgram';
+import { InjectLogger } from '../logger';
+import { clearInterval } from 'timers';
+import { DiscoveryStatus } from './discovery.interface';
+import { Communicator } from '../communicator/communicator.interface';
+import { NodeManager } from '../node/node-manager';
+import { LoggerInterface } from '../logger/logger.interface';
+import { PollPacket, PollReplyPacket, PollReplyPacketPayload } from '@rtf-dm/artnet-packets';
 
 export class Discovery {
   @InjectLogger private logger: LoggerInterface;
@@ -31,18 +31,11 @@ export class Discovery {
   }
 
   public setReplyInfo(payload?: Partial<Omit<PollReplyPacketPayload, 'macAddress'>>) {
-    const communicatorBoundIp = this.communicator
-                                    .boundNetworkInfo
-                                    .networkIp
-                                    .split('.')
-                                    .map((n) => parseInt(n));
+    const communicatorBoundIp = this.communicator.boundNetworkInfo.networkIp.split('.').map((n) => parseInt(n));
 
     this.pollReplyPacket = new PollReplyPacket({
       ...payload,
-      macAddress: this.communicator
-                      .selfMacAddress
-                      .split(':')
-                      .map(v => parseInt(v, 16)),
+      macAddress: this.communicator.selfMacAddress.split(':').map((v) => parseInt(v, 16)),
       port: payload?.port ?? this.communicator.boundNetworkInfo.port,
       ipAddress: payload?.ipAddress ?? communicatorBoundIp,
     });
@@ -58,7 +51,7 @@ export class Discovery {
       void this.communicator.sendBroadcast(packet);
       this.pollTimer = setTimeout(this.discoveryLoop, this.pollingInterval);
     }
-  }
+  };
 
   public run(): void {
     this.stop();
@@ -82,7 +75,7 @@ export class Discovery {
     return this.isActive ? 'RUNNING' : 'SUSPENDED';
   }
 
-  private handleArtPoll =  (data: Buffer, {address, port}: RemoteInfo): void => {
+  private handleArtPoll = (data: Buffer, { address, port }: RemoteInfo): void => {
     if (!PollPacket.is(data) || !this.sendArtPollReply) return;
 
     this.logger.warn('ArtPoll handling for debug purposes only, disable after debug completed');

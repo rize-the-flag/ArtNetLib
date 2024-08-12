@@ -1,13 +1,11 @@
-import {Emitter, EventHandler} from '@rtf-dm/typed-emitter';
-import {RemoteInfo} from 'dgram';
-import {AddressInfo} from 'net';
-import {NetworkConfig} from '../types';
-
+import { Emitter, EventHandler } from '@rtf-dm/typed-emitter';
+import { RemoteInfo } from 'dgram';
+import { AddressInfo } from 'net';
+import { NetworkConfig } from '../types';
 
 export type CommunicatorEvents = {
   UDP_PACKET: EventHandler<[Buffer, RemoteInfo]>;
-}
-
+};
 
 export interface Communicator extends Emitter<CommunicatorEvents> {
   get selfMacAddress(): string;

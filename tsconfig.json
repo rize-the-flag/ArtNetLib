@@ -9,16 +9,10 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "sourceMap": false,
-    "baseUrl": "./",
+    "baseUrl": "./"
   },
   "paths": {
-    "@packages/*": [
-      "./packages/*"
-    ]
+    "@packages/*": ["./packages/*"]
   },
-  "exclude": [
-    "./build",
-    "./dist",
-    "./eslint.config.mjs"
-  ]
+  "exclude": ["./build", "./dist", "./eslint.config.mjs"]
 }

@@ -1,17 +1,15 @@
-import dgram, {RemoteInfo, Socket} from 'dgram';
-import os, {NetworkInterfaceInfo} from 'os';
-import {ARTNET_ERROR_CODE, ARTNET_PORT, DEFAULT_NETMASK, DEFAULT_NETWORK} from '../constants';
-import {ArtNetLibError} from '../lib-error';
-import {InjectLogger, Log} from '../logger';
-import {AddressInfo} from 'net';
-import {NetworkConfig} from '../types';
-import {TypedEmitter} from '@rtf-dm/typed-emitter';
-import {Communicator, CommunicatorEvents} from './communicator.interface';
-import {LoggerInterface} from '../logger/logger.interface';
-
+import dgram, { RemoteInfo, Socket } from 'dgram';
+import os, { NetworkInterfaceInfo } from 'os';
+import { ARTNET_ERROR_CODE, ARTNET_PORT, DEFAULT_NETMASK, DEFAULT_NETWORK } from '../constants';
+import { ArtNetLibError } from '../lib-error';
+import { InjectLogger, Log } from '../logger';
+import { AddressInfo } from 'net';
+import { NetworkConfig } from '../types';
+import { TypedEmitter } from '@rtf-dm/typed-emitter';
+import { Communicator, CommunicatorEvents } from './communicator.interface';
+import { LoggerInterface } from '../logger/logger.interface';
 
 //TODO: I'am not sure that i need to do this however Network communicator
-
 
 export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implements Communicator {
   @InjectLogger private logger: LoggerInterface;
@@ -24,11 +22,11 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
       networkIp: DEFAULT_NETWORK,
       networkMask: DEFAULT_NETMASK,
       port: ARTNET_PORT,
-    },
+    }
   ) {
     super();
-    const {networkIp, networkMask} = this.networkConfig;
-    this.socket = dgram.createSocket({type: 'udp4', reuseAddr: true});
+    const { networkIp, networkMask } = this.networkConfig;
+    this.socket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
     this.broadcastIpAddress = NetworkCommunicator.getBroadcastAddress(networkIp, networkMask);
 
     this.updateSelfMac(networkIp);
@@ -40,35 +38,33 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
   }
 
   get boundNetworkInfo(): NetworkConfig {
-    return {...this.networkConfig};
+    return { ...this.networkConfig };
   }
 
   get broadcastAddressInfo(): AddressInfo {
-    return {...this.socket.address()};
+    return { ...this.socket.address() };
   }
 
   public updateSelfMac(ipAddress: string): void {
-    let selfMacAddress = NetworkCommunicator
-      .enumerateNetworkConnections()
-      .find(interfaceInfo => interfaceInfo.address === ipAddress)?.mac;
+    let selfMacAddress = NetworkCommunicator.enumerateNetworkConnections().find(
+      (interfaceInfo) => interfaceInfo.address === ipAddress
+    )?.mac;
     selfMacAddress ??= NetworkCommunicator.enumerateNetworkConnections().pop()?.mac;
     this._selfMacAddress = selfMacAddress ?? '00:00:00:00:00:00';
   }
 
   @Log
   public async init(): Promise<void> {
-    this.socket = dgram.createSocket({type: 'udp4', reuseAddr: true});
+    this.socket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
     this.socket.removeAllListeners();
     this.socket.on('error', this.errorHandler);
     this.socket.on('message', this.udpPacketHandler);
 
     const listenEvent = new Promise<void>((resolve) =>
       this.socket.on('listening', () => {
-        this.logger.info(
-          `Starting listen ArtNet packages on ${this.broadcastIpAddress}:${String(this.networkConfig.port)}`,
-        );
+        this.logger.info(`Starting listen ArtNet packages on ${this.broadcastIpAddress}:${String(this.networkConfig.port)}`);
         resolve();
-      }),
+      })
     );
 
     this.socket.bind(
@@ -78,7 +74,7 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
       },
       () => {
         this.socket.setBroadcast(true);
-      },
+      }
     );
 
     this.socket.unref();
@@ -102,15 +98,17 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
 
   @Log
   public async dispose(): Promise<void> {
-    return new Promise(resolve => this.socket.close(() => {
-      this.logger.warn('Socket was closed');
-      resolve();
-    }));
+    return new Promise((resolve) =>
+      this.socket.close(() => {
+        this.logger.warn('Socket was closed');
+        resolve();
+      })
+    );
   }
 
   @Log
-  public async changeNetwork({networkIp, networkMask, port}: NetworkConfig): Promise<string> {
-    this.networkConfig = {networkIp, networkMask, port};
+  public async changeNetwork({ networkIp, networkMask, port }: NetworkConfig): Promise<string> {
+    this.networkConfig = { networkIp, networkMask, port };
     this.broadcastIpAddress = NetworkCommunicator.getBroadcastAddress(networkIp, networkMask);
     this.updateSelfMac(networkIp);
 
@@ -151,11 +149,6 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
 
   private errorHandler = (error: Error): void => {
     this.socket.close();
-    throw new ArtNetLibError(
-      ARTNET_ERROR_CODE.SOCKET_ERROR,
-      `ArtNetLib Fatal Error ${error.message}`,
-    );
+    throw new ArtNetLibError(ARTNET_ERROR_CODE.SOCKET_ERROR, `ArtNetLib Fatal Error ${error.message}`);
   };
 }
-
-

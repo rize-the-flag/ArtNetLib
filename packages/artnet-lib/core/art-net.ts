@@ -1,14 +1,13 @@
-import {NodeManager} from './node/node-manager';
-import {Discovery} from './discovery/discovery';
-import {SupportedDevices} from './device/common/device-contracts';
-import {LibConfig, NetworkConfig, ThrowsException} from './types';
-import {Universe} from './universe/universe';
-import {DeviceFactory} from './device/common/factory';
-import {NetworkCommunicator} from './communicator/network-communicator';
-import {ArtNetDeviceAction, DeviceConstructorArgs} from './device/device.interface';
-import {UniverseAction, UniverseActionGroup} from './art-net.interface';
-import {Node} from './node/node';
-
+import { NodeManager } from './node/node-manager';
+import { Discovery } from './discovery/discovery';
+import { SupportedDevices } from './device/common/device-contracts';
+import { LibConfig, NetworkConfig, ThrowsException } from './types';
+import { Universe } from './universe/universe';
+import { DeviceFactory } from './device/common/factory';
+import { NetworkCommunicator } from './communicator/network-communicator';
+import { ArtNetDeviceAction, DeviceConstructorArgs } from './device/device.interface';
+import { UniverseAction, UniverseActionGroup } from './art-net.interface';
+import { Node } from './node/node';
 
 export class ArtNetImpl {
   private readonly deviceRegistry = DeviceFactory.getInstance();
@@ -51,7 +50,7 @@ export class ArtNetImpl {
    * @return {boolean}
    */
   public isUniverseExist(name: string): boolean {
-    return !!~this.universes.findIndex(u => u.name === name);
+    return !!~this.universes.findIndex((u) => u.name === name);
   }
 
   /**
@@ -61,7 +60,7 @@ export class ArtNetImpl {
    * @return {Universe | null}
    */
   public getUniverseByName(name: string): Universe | null {
-    return this.universes.find(u => u.name === name) ?? null;
+    return this.universes.find((u) => u.name === name) ?? null;
   }
 
   /**
@@ -80,7 +79,10 @@ export class ArtNetImpl {
    * @param {number} dmxDataSize
    * @return {InstanceType<SupportedDevices[TDevice]>}
    */
-  public createDevice<TDevice extends keyof SupportedDevices>(deviceType: TDevice, dmxDataSize?: number): InstanceType<SupportedDevices[TDevice]> {
+  public createDevice<TDevice extends keyof SupportedDevices>(
+    deviceType: TDevice,
+    dmxDataSize?: number
+  ): InstanceType<SupportedDevices[TDevice]> {
     return this.deviceRegistry.createDevice(deviceType, dmxDataSize);
   }
 
@@ -99,7 +101,7 @@ export class ArtNetImpl {
    * @return {Node | null}
    */
   public removeNode(macAddress: string): Node | null {
-    return this._nodeManager.removeNodes(node => node.macAddress === macAddress).pop() ?? null;
+    return this._nodeManager.removeNodes((node) => node.macAddress === macAddress).pop() ?? null;
   }
 
   /**
@@ -118,9 +120,7 @@ export class ArtNetImpl {
    * @return {(Generic | MixPanel150)[]}
    */
   public createDevices(devices: DeviceConstructorArgs[]) {
-    return devices.map(({
-      deviceDriver, numChannels,
-    }) => this.deviceRegistry.createDevice(deviceDriver, numChannels))
+    return devices.map(({ deviceDriver, numChannels }) => this.deviceRegistry.createDevice(deviceDriver, numChannels));
   }
 
   /**
@@ -135,7 +135,7 @@ export class ArtNetImpl {
     const universe = new Universe(name);
 
     if (devices) {
-      this.createDevices(devices).forEach(device => universe.add(device));
+      this.createDevices(devices).forEach((device) => universe.add(device));
     }
 
     this.universes.push(universe);
@@ -183,7 +183,7 @@ export class ArtNetImpl {
   public removeUniverse(name: string): Universe | null {
     if (this.isUniverseExist(name)) return null;
 
-    const universeIdx = this.universes.findIndex(uni => uni.name === name);
+    const universeIdx = this.universes.findIndex((uni) => uni.name === name);
     const universe = this.universes[universeIdx];
     this.universes.splice(universeIdx, 1);
     return universe;
@@ -196,15 +196,23 @@ export class ArtNetImpl {
    * @param {string} universeName
    * @return {{node: Node, Universe: Universe} | null}
    */
-  public attachUniverse(nodeMac: string, nodePort: number, universeName: string): { universe: Universe, node: Node } | null {
+  public attachUniverse(
+    nodeMac: string,
+    nodePort: number,
+    universeName: string
+  ): {
+    universe: Universe;
+    node: Node;
+  } | null {
     const universe = this.getUniverseByName(universeName);
     const node = this.nodeManager.getByMac(nodeMac);
     if (!universe || !node) return null;
     node.attachUniverse(nodePort, universe);
 
     return {
-      universe, node,
-    }
+      universe,
+      node,
+    };
   }
 
   /**
@@ -225,11 +233,15 @@ export class ArtNetImpl {
    * @param {ArtNetDeviceAction} action
    * @return {Universe | null}
    */
-  public setDeviceGroupAction(universeName: string, deviceGroup: keyof SupportedDevices, action: ArtNetDeviceAction): ThrowsException<Universe | null> {
+  public setDeviceGroupAction(
+    universeName: string,
+    deviceGroup: keyof SupportedDevices,
+    action: ArtNetDeviceAction
+  ): ThrowsException<Universe | null> {
     const universe = this.getUniverseByName(universeName);
     if (!universe) return null;
 
-    universe.getDevice(deviceGroup).forEach(device => {
+    universe.getDevice(deviceGroup).forEach((device) => {
       device.setAction(action);
     });
 
@@ -270,7 +282,7 @@ export class ArtNetImpl {
    * @return {Promise<number | null>}
    */
   async broadcastUniverse(payload: UniverseAction): Promise<number | null> {
-    const universe = this.setUniverseAction(payload)
+    const universe = this.setUniverseAction(payload);
     return universe ? await this.sendBroadcast(universe) : null;
   }
 
@@ -294,7 +306,7 @@ export class ArtNetImpl {
     const node = this.nodeManager.getByMac(nodeMac);
     const universe = this.setUniverseAction(universeAction);
     if (!node || !universe) return null;
-    return await node.syncRemotePort(universe)
+    return await node.syncRemotePort(universe);
   }
 
   /**
@@ -305,22 +317,19 @@ export class ArtNetImpl {
     return this.deviceRegistry.getRegisteredDevices();
   }
 
-  public enumerateInterfacesInfo(): { address: string, netmask: string, mac: string }[] {
+  public enumerateInterfacesInfo(): {
+    address: string;
+    netmask: string;
+    mac: string;
+  }[] {
     return NetworkCommunicator.enumerateNetworkConnections()
-                              .filter(({
-                                family,
-                              }) => family === 'IPv4')
-                              .map(({
-                                address,
-                                netmask,
-                                mac,
-                              }) => ({
-                                address,
-                                netmask,
-                                mac,
-                              }))
+      .filter(({ family }) => family === 'IPv4')
+      .map(({ address, netmask, mac }) => ({
+        address,
+        netmask,
+        mac,
+      }));
   }
-
 
   dispose(): Promise<void> {
     this._discovery.stop();

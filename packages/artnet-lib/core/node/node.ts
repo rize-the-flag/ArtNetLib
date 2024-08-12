@@ -9,8 +9,8 @@ export class Node {
     private pollReplyPayload: PollReplyPacketPayload;
     private _lastResponseTime: Date;
     private ports = new Map<number, Universe>();
-
     accessor isAlive = false;
+
     constructor(pollReplyPayload: PollReplyPacketPayload, communicator: Communicator) {
         this.update(pollReplyPayload);
         this.networkCommunicator = communicator;

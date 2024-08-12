@@ -1,8 +1,8 @@
-import { ArtNetPacket } from './common/art-net-packet';
-import { PROTOCOL_VERSION } from './constants';
-import { DmxPacketSchema, DmxPacketPayload } from './common/packet.interface';
-import { OP_CODE } from './constants';
+import {ArtNetPacket} from './common/art-net-packet';
+import {OP_CODE, PROTOCOL_VERSION} from './constants';
+import {DmxPacketPayload} from './common/packet.interface';
 import {ThrowsException} from './types';
+import {decode, Schema} from "@rtf-dm/protocol";
 
 
 export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
@@ -22,7 +22,7 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
 			...payload
 		}
 
-		const schema: DmxPacketSchema =[
+		const schema = new Schema([
 			//The order of schema fields make sense do not change it!!!
 			['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
 			['sequence', { length: 1, type: 'number' }],
@@ -31,7 +31,8 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
 			['net', { length: 1, type: 'number' }],
 			['length', { length: 2, type: 'number', byteOrder: 'BE' }],
 			['dmxData', { length, type: 'array' }],
-		];
+		])
+
 
 		super(
 			OP_CODE.DMX,
@@ -42,6 +43,11 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
 
 	static is(data: Buffer): boolean {
 		return super.is(data) && ArtNetPacket.readPacketOpCode(data) === OP_CODE.DMX;
+	}
+
+	static getDmxDataLen(data: Buffer) {
+		if (!DmxPacket.is(data)) return null;
+		return Number(data.readUInt16BE(16))
 	}
 
 	public setNet(net = 0): this {
@@ -83,5 +89,10 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
 		}
 
 		this.payload.dmxData = [...data];
+	}
+
+	public static create(data: Buffer, schema: Schema<DmxPacketPayload>): DmxPacket | null {
+		if (DmxPacket.is(data)) return new DmxPacket(decode(data, schema));
+		return null;
 	}
 }

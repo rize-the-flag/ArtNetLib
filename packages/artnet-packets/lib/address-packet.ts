@@ -1,9 +1,8 @@
 import {ArtNetPacket} from './common/art-net-packet';
-import {AddressPacketSchema, AddressPacketPayload, HeaderPayload} from './common/packet.interface';
-import {PROTOCOL_VERSION} from './constants';
-import {OP_CODE} from './constants';
+import {AddressPacketPayload, DmxPacketPayload} from './common/packet.interface';
+import {OP_CODE, PROTOCOL_VERSION} from './constants';
 import * as Buffer from "node:buffer";
-
+import {decode, Schema} from "@rtf-dm/protocol";
 
 
 export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
@@ -24,7 +23,7 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
             ...payload
         };
 
-        const schema: AddressPacketSchema = [
+        const schema = new Schema<AddressPacketPayload>([
             ['protoVersion', {length: 2, type: 'number', byteOrder: 'BE'}],
             ['netSwitch', {length: 1, type: 'number'}],
             ['bindIndex', {length: 1, type: 'number'}],
@@ -35,7 +34,7 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
             ['netSubSwitch', {length: 1, type: 'number'}],
             ['swVideo', {length: 1, type: 'number'}],
             ['command', {length: 1, type: 'number'}],
-        ];
+        ]);
 
         super(
             OP_CODE.ADDRESS,
@@ -62,5 +61,10 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
 
     public static is(data: Buffer): boolean {
         return super.is(data) && ArtNetPacket.readPacketOpCode(data) === OP_CODE.ADDRESS;
+    }
+
+    public static create(data: Buffer, schema: Schema<DmxPacketPayload>): AddressPacket | null {
+        if (AddressPacket.is(data)) return new AddressPacket(decode(data, schema));
+        return null;
     }
 }

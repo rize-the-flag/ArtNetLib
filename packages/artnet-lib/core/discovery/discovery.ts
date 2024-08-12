@@ -18,7 +18,6 @@ export class Discovery {
   private pollingInterval: number = DEFAULT_POLL_INTERVAL;
 
   private pollReplyPacket: PollReplyPacket;
-  private readonly pollPacket: PollPacket = new PollPacket();
   private readonly communicator: Communicator;
   private readonly nodeManager: NodeManager;
 
@@ -55,7 +54,7 @@ export class Discovery {
 
   private discoveryLoop = () => {
     if (this.isActive) {
-      const packet = this.pollPacket.encode();
+      const packet = new PollPacket().encode();
       void this.communicator.sendBroadcast(packet);
       this.pollTimer = setTimeout(this.discoveryLoop, this.pollingInterval);
     }

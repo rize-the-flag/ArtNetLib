@@ -1,11 +1,46 @@
-import { ArtNetPacket } from './common/art-net-packet';
-import { ARTNET_PORT } from './constants';
-import { PollReplyPacketPayload, PollReplyPacketSchema } from './common/packet.interface';
-import { OP_CODE } from './constants';
-
+import {ArtNetPacket} from './common/art-net-packet';
+import {ARTNET_PORT, OP_CODE} from './constants';
+import {PollReplyPacketPayload} from './common/packet.interface';
+import {decode, Schema} from "@rtf-dm/protocol";
+import Buffer from "node:buffer";
 
 
 export class PollReplyPacket extends ArtNetPacket<PollReplyPacketPayload> {
+
+	static schemaDefault =  new Schema([
+		['ipAddress', { length: 4, type: 'array' }],
+		['port', { length: 2, type: 'number', byteOrder: 'LE' }],
+		['firmwareVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
+		['netSwitch', { length: 1, type: 'number' }],
+		['netSubSwitch', { length: 1, type: 'number' }],
+		['oem', { length: 2, type: 'number', byteOrder: 'BE' }],
+		['ubeaVersion', { length: 1, type: 'number' }],
+		['status1', { length: 1, type: 'number' }],
+		['estaManufactorerCode', { length: 2, type: 'number', byteOrder: 'BE' }],
+		['shortName', { length: 18, type: 'string' }],
+		['longName', { length: 64, type: 'string' }],
+		['nodeReport', { length: 64, type: 'string' }],
+		['numPorts', { length: 2, type: 'number', byteOrder: 'BE' }],
+		['portTypes', { length: 4, type: 'array' }],
+		['goodInput', { length: 4, type: 'array' }],
+		['goodOutputA', { length: 4, type: 'array' }],
+		['swIn', { length: 4, type: 'array' }],
+		['swOut', { length: 4, type: 'array' }],
+		['acnPriority', { length: 1, type: 'number' }],
+		['swMacro', { length: 1, type: 'number' }],
+		['swRemote', { length: 1, type: 'number' }],
+		['spare', { length: 3, type: 'array' }],
+		['style', { length: 1, type: 'number' }],
+		['macAddress', { length: 6, type: 'array' }],
+		['bindIp', { length: 4, type: 'array' }],
+		['bindIndex', { length: 1, type: 'number' }],
+		['status2', { length: 1, type: 'number' }],
+		['goodOutputB', { length: 1, type: 'number' }],
+		['status3', { length: 1, type: 'number' }],
+		['defaultRespUID', { length: 6, type: 'array' }],
+		['filler', { length: 15, type: 'array' }],
+	]);
+
 	constructor(payload: Partial<PollReplyPacketPayload> = {}) {
 		const pollReplyPacketPayload: PollReplyPacketPayload = {
 			ipAddress: [0, 0, 0, 0],
@@ -43,48 +78,20 @@ export class PollReplyPacket extends ArtNetPacket<PollReplyPacketPayload> {
 		}
 
 		//order of schema fields make sense do not change it!!!
-		const schema: PollReplyPacketSchema = [
-			['ipAddress', { length: 4, type: 'array' }],
-			['port', { length: 2, type: 'number', byteOrder: 'LE' }],
-			['firmwareVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
-			['netSwitch', { length: 1, type: 'number' }],
-			['netSubSwitch', { length: 1, type: 'number' }],
-			['oem', { length: 2, type: 'number', byteOrder: 'BE' }],
-			['ubeaVersion', { length: 1, type: 'number' }],
-			['status1', { length: 1, type: 'number' }],
-			['estaManufactorerCode', { length: 2, type: 'number', byteOrder: 'BE' }],
-			['shortName', { length: 18, type: 'string' }],
-			['longName', { length: 64, type: 'string' }],
-			['nodeReport', { length: 64, type: 'string' }],
-			['numPorts', { length: 2, type: 'number', byteOrder: 'BE' }],
-			['portTypes', { length: 4, type: 'array' }],
-			['goodInput', { length: 4, type: 'array' }],
-			['goodOutputA', { length: 4, type: 'array' }],
-			['swIn', { length: 4, type: 'array' }],
-			['swOut', { length: 4, type: 'array' }],
-			['acnPriority', { length: 1, type: 'number' }],
-			['swMacro', { length: 1, type: 'number' }],
-			['swRemote', { length: 1, type: 'number' }],
-			['spare', { length: 3, type: 'array' }],
-			['style', { length: 1, type: 'number' }],
-			['macAddress', { length: 6, type: 'array' }],
-			['bindIp', { length: 4, type: 'array' }],
-			['bindIndex', { length: 1, type: 'number' }],
-			['status2', { length: 1, type: 'number' }],
-			['goodOutputB', { length: 1, type: 'number' }],
-			['status3', { length: 1, type: 'number' }],
-			['defaultRespUID', { length: 6, type: 'array' }],
-			['filler', { length: 15, type: 'array' }],
-		];
 
 		super(
 			OP_CODE.POLL_REPLY,
 			pollReplyPacketPayload,
-			schema,
+			PollReplyPacket.schemaDefault,
 		);
 	}
 
 	static is(data: Buffer): boolean {
 		return super.is(data) && ArtNetPacket.readPacketOpCode(data) === OP_CODE.POLL_REPLY;
+	}
+
+	public static create(data: Buffer, schema: Schema<PollReplyPacketPayload> = PollReplyPacket.schemaDefault): PollReplyPacket | null {
+		if (PollReplyPacket.is(data)) return new PollReplyPacket(decode(data, schema));
+		return null;
 	}
 }

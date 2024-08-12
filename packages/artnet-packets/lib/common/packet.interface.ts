@@ -3,9 +3,10 @@ import {
   ARTPOLL_REPLY_SEND_POLICY,
   DIAG_PRIORITY,
   DIAGNOSTICS_MESSAGE_POLICY,
-  OP_CODE, PROTOCOL_VERSION,
+  OP_CODE,
+  PROTOCOL_VERSION,
 } from '../constants';
-import {PacketPayload, PacketSchemaPublic} from '@rtf-dm/protocol';
+import {PacketSchemaFromPayload} from '@rtf-dm/protocol';
 
 export type HeaderPayload = {
   ID: string;
@@ -93,13 +94,13 @@ export type AddressPacketPayload = {
   command: number;
 }
 
-export type PollPacketSchema = PacketSchemaPublic<PollPacketPayload>;
-export type DmxPacketSchema = PacketSchemaPublic<DmxPacketPayload>;
-export type PollReplyPacketSchema = PacketSchemaPublic<PollReplyPacketPayload>;
-export type HeaderSchema = PacketSchemaPublic<HeaderPayload>;
-export type SyncPacketSchema = PacketSchemaPublic<SyncPacketPayload>;
-export type DiagDataPacketSchema = PacketSchemaPublic<DiagDataPayload>;
-export type AddressPacketSchema = PacketSchemaPublic<AddressPacketPayload>;
+export type PollPacketSchema = PacketSchemaFromPayload<PollPacketPayload>;
+export type DmxPacketSchema = PacketSchemaFromPayload<DmxPacketPayload>;
+export type PollReplyPacketSchema = PacketSchemaFromPayload<PollReplyPacketPayload>;
+export type HeaderSchema = PacketSchemaFromPayload<HeaderPayload>;
+export type SyncPacketSchema = PacketSchemaFromPayload<SyncPacketPayload>;
+export type DiagDataPacketSchema = PacketSchemaFromPayload<DiagDataPayload>;
+export type AddressPacketSchema = PacketSchemaFromPayload<AddressPacketPayload>;
 
 export type OpCode = valueOf<typeof OP_CODE>;
 export type DiagPriority = keyof typeof DIAG_PRIORITY;

@@ -1,7 +1,7 @@
-import { ArtNetPacket } from './common/art-net-packet';
-import { PROTOCOL_VERSION } from './constants';
-import { SyncPacketPayload, SyncPacketSchema } from './common/packet.interface';
-import { OP_CODE } from './constants';
+import {ArtNetPacket} from './common/art-net-packet';
+import {OP_CODE, PROTOCOL_VERSION} from './constants';
+import {SyncPacketPayload} from './common/packet.interface';
+import {Schema} from "@rtf-dm/protocol";
 
 export class SyncPacket extends ArtNetPacket<SyncPacketPayload> {
 
@@ -14,11 +14,11 @@ export class SyncPacket extends ArtNetPacket<SyncPacketPayload> {
 		}
 
 		//order of schema fields make sense do not change it!!!
-		const schema: SyncPacketSchema = [
+		const schema = new Schema([
 			['protoVersion', {length: 2, type: 'number', byteOrder: 'BE'}],
 			['aux1', {length: 1, type: 'number'}],
 			['aux2', {length: 1, type: 'number'}],
-		];
+		]);
 
 		super(
 			OP_CODE.SYNC,

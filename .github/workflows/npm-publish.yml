@@ -43,6 +43,6 @@ jobs:
       - name: Building ArtNet
         run: npm run build
       - name: Publishing
-        run: npm publish --workspace=packages
+        run: npm publish --w ./packages/
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm}}

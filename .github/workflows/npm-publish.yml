@@ -36,7 +36,12 @@ jobs:
         with:
           node-version: 21
           registry-url: https://registry.npmjs.org/
-      - run: npm run build
+      - name: Installing monorepo npm packages
+        run: npm install --workspace=packages
+      - name: Installing other npm packages
+        run: npm install
+      - name: Building ArtNet
+        run: npm run build
       - name: Publishing
         run: npm publish --workspace=packages
         env:

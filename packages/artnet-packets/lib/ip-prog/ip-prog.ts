@@ -2,7 +2,6 @@ import { ArtNetPacket } from '../common/art-net-packet';
 import { IpProgPayload } from './ip-prog.interface';
 import { decode, Schema } from '@rtf-dm/protocol';
 import { OP_CODE, PROTOCOL_VERSION } from '../constants';
-import Buffer from 'node:buffer';
 
 export class IpProgPacket extends ArtNetPacket<IpProgPayload> {
   private static readonly defaultSchema = new Schema<IpProgPayload>([
@@ -58,7 +57,7 @@ export class IpProgPacket extends ArtNetPacket<IpProgPayload> {
       spare7: 0,
       ...payload,
     };
-    console.log(defaultPayload);
+
     super(OP_CODE.IP_PROG, defaultPayload, IpProgPacket.defaultSchema);
   }
 

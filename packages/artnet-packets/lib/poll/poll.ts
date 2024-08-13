@@ -19,15 +19,13 @@ export class Poll extends ArtNetPacket<PollPacketPayload> {
     const pollPacketPayload: PollPacketPayload = {
       protoVersion: PROTOCOL_VERSION,
       diagPriority: DIAG_PRIORITY.DpLow,
-      flags: 0b00000000,
+      flags: 0b00000110,
       targetPortAddressTop: 0,
       targetPortAddressBottom: 0,
       ...payload,
     };
 
     super(OP_CODE.POLL, pollPacketPayload, Poll.schemaDefault);
-
-    this.sendMeDiagnostics(true).setDiagnosticsPolicy('BROADCAST').setArtPollReplyPolicy('ON_NODE_CONDITION_CHANGE');
   }
 
   public setDiagPriority(priority: DiagPriority): this {
@@ -35,9 +33,9 @@ export class Poll extends ArtNetPacket<PollPacketPayload> {
     return this;
   }
 
-  public setTargetPort(top = 0, bottom = 0): this {
-    this.payload.targetPortAddressTop = top;
-    this.payload.targetPortAddressBottom = bottom;
+  public setTargetPort(port: number): this {
+    this.payload.targetPortAddressTop = port & 0xff00;
+    this.payload.targetPortAddressBottom = port & 0x00ff;
     return this;
   }
 

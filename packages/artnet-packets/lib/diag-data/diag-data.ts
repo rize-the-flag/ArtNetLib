@@ -1,9 +1,7 @@
 import { ArtNetPacket } from '../common/art-net-packet';
 import { OP_CODE, PROTOCOL_VERSION } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
-import { PollPacketPayload } from '../poll/poll.interface';
 import { DiagDataPayload } from './diag-data.interface';
-import Buffer from 'node:buffer';
 
 export class DiagData extends ArtNetPacket<DiagDataPayload> {
   static readonly DIAG_CHANNEL_MAX = 512;
@@ -19,7 +17,6 @@ export class DiagData extends ArtNetPacket<DiagDataPayload> {
   ]);
 
   constructor(payload: Partial<DiagDataPayload> = {}) {
-
     const length = payload.length ?? 16;
 
     const diagDataPacket: DiagDataPayload = {
@@ -33,7 +30,7 @@ export class DiagData extends ArtNetPacket<DiagDataPayload> {
       ...payload,
     };
 
-    DiagData.schemaDefault.setValue('data', {length, type: "string", byteOrder: 'BE'});
+    DiagData.schemaDefault.setValue('data', { length, type: 'string' });
     super(OP_CODE.DIAG_DATA, diagDataPacket, DiagData.schemaDefault);
   }
 

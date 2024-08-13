@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "npm run build --workspace=packages",
-    "lint": "prettier . --write && npx eslint --config eslint.config.mjs . --fix",
+    "lint": "prettier . --write && npx eslint . --fix",
     "test": "jest --config ./configs/jest/jest.config.js",
     "cleanup": "npm run cleanup --workspace=packages"
   },

@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import { ARTNET_PACKET_ID, OP_CODE, PROTOCOL_VERSION } from '../constants';
-import {DiagDataPayload} from "./diag-data.interface";
-import {DiagData} from "./diag-data";
+import { DiagDataPayload } from './diag-data.interface';
+import { DiagData } from './diag-data';
 
 describe('Diag packet test', () => {
   test('Diag packet encode-decode test', () => {
@@ -13,7 +13,7 @@ describe('Diag packet test', () => {
       filler1: 0,
       filler3: 0,
       logicalPort: 2,
-      data: 'Test data'
+      data: 'Test data',
     };
 
     const diagData = new DiagData(defaultPayload);
@@ -25,7 +25,6 @@ describe('Diag packet test', () => {
       opCode: OP_CODE.DIAG_DATA,
       ...defaultPayload,
     });
-
 
     expect(DiagData.getDiagDataLength(udpPacket)).toBe(length);
   });
@@ -39,7 +38,7 @@ describe('Diag packet test', () => {
       filler1: 0,
       filler3: 0,
       logicalPort: 2,
-      data: 'Test data'
+      data: 'Test data',
     };
 
     const udpPacket = new DiagData(defaultPayload).encode();

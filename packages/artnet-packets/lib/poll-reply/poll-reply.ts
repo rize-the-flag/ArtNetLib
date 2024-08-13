@@ -1,13 +1,12 @@
 import { ArtNetPacket } from '../common/art-net-packet';
 import { ARTNET_PORT, OP_CODE } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
-import Buffer from 'node:buffer';
 import { PollReplyPacketPayload } from './poll-reply.interface';
 
 export class PollReply extends ArtNetPacket<PollReplyPacketPayload> {
   //order of schema fields make sense do not change it!!!
   static schemaDefault = new Schema([
-    ['ipAddress', { length: 4, type: 'array' }],
+    ['ipAddress', { length: 4, type: 'array', size: 1 }],
     ['port', { length: 2, type: 'number', byteOrder: 'LE' }],
     ['firmwareVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
     ['netSwitch', { length: 1, type: 'number' }],
@@ -20,24 +19,24 @@ export class PollReply extends ArtNetPacket<PollReplyPacketPayload> {
     ['longName', { length: 64, type: 'string' }],
     ['nodeReport', { length: 64, type: 'string' }],
     ['numPorts', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['portTypes', { length: 4, type: 'array' }],
-    ['goodInput', { length: 4, type: 'array' }],
-    ['goodOutputA', { length: 4, type: 'array' }],
-    ['swIn', { length: 4, type: 'array' }],
-    ['swOut', { length: 4, type: 'array' }],
+    ['portTypes', { length: 4, type: 'array', size: 1 }],
+    ['goodInput', { length: 4, type: 'array', size: 1 }],
+    ['goodOutputA', { length: 4, type: 'array', size: 1 }],
+    ['swIn', { length: 4, type: 'array', size: 1 }],
+    ['swOut', { length: 4, type: 'array', size: 1 }],
     ['acnPriority', { length: 1, type: 'number' }],
     ['swMacro', { length: 1, type: 'number' }],
     ['swRemote', { length: 1, type: 'number' }],
-    ['spare', { length: 3, type: 'array' }],
+    ['spare', { length: 3, type: 'array', size: 1 }],
     ['style', { length: 1, type: 'number' }],
-    ['macAddress', { length: 6, type: 'array' }],
-    ['bindIp', { length: 4, type: 'array' }],
+    ['macAddress', { length: 6, type: 'array', size: 1 }],
+    ['bindIp', { length: 4, type: 'array', size: 1 }],
     ['bindIndex', { length: 1, type: 'number' }],
     ['status2', { length: 1, type: 'number' }],
     ['goodOutputB', { length: 1, type: 'number' }],
     ['status3', { length: 1, type: 'number' }],
-    ['defaultRespUID', { length: 6, type: 'array' }],
-    ['filler', { length: 15, type: 'array' }],
+    ['defaultRespUID', { length: 6, type: 'array', size: 1 }],
+    ['filler', { length: 15, type: 'array', size: 1 }],
   ]);
 
   constructor(payload: Partial<PollReplyPacketPayload> = {}) {

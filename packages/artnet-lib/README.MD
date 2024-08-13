@@ -328,6 +328,11 @@ await artNet.nodeManager.getByMac(nodeInfo.macAddress)?.configure({
 
 ## Change log
 
+#### VER 1.6.0
+
+- Improvements in protocol package for the future 2 bytes DMX channels.
+- Update ArtNet packets library, writing tests for critical packets.
+
 #### VER 1.5.16
 
 - Move artnet packets to separate package @rtf-dm/artnet-packets

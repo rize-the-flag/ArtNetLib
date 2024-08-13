@@ -10,5 +10,5 @@
     "strictPropertyInitialization": false /* Check for class properties that are declared but not set in the constructor. */,
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["./build"]
+  "exclude": ["./build", "**/*.test.ts"]
 }

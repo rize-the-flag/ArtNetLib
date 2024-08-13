@@ -8,5 +8,5 @@
     "forceConsistentCasingInFileNames": true,
     "noEmitOnError": true
   },
-  "exclude": ["./build"]
+  "exclude": ["./build", "**/*.test.ts"]
 }

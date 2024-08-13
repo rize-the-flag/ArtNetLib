@@ -1,4 +1,4 @@
-import { PacketPayload, PacketSchemaFromPayload, PacketSchemaPublic, PacketSchemaRecord } from '../types';
+import { PacketPayload, PacketSchemaFromPayload, PacketSchemaPublic, PacketSchemaRecord2 } from '../types';
 
 export class Schema<TPayload extends PacketPayload> {
   private schema: PacketSchemaFromPayload<TPayload>;
@@ -6,7 +6,7 @@ export class Schema<TPayload extends PacketPayload> {
     this.schema = new Map(structuredClone(schema));
   }
 
-  setValue(key: keyof TPayload, value: PacketSchemaRecord) {
+  setValue(key: keyof TPayload, value: PacketSchemaRecord2) {
     this.schema.set(key, value);
   }
 
@@ -15,7 +15,9 @@ export class Schema<TPayload extends PacketPayload> {
   }
 
   calcBytesInPacket() {
-    return Array.from(this.schema.values()).reduce((prev, current) => prev + current.length, 0);
+    return Array.from(this.schema.values()).reduce((prev, current) => {
+      return current.type === 'array' ? prev + current.length * current.size : prev + current.length;
+    }, 0);
   }
 
   public getOffsetOf(fieldName: keyof TPayload) {
@@ -25,7 +27,12 @@ export class Schema<TPayload extends PacketPayload> {
       if (key === fieldName) {
         return count;
       }
-      count += value.length;
+
+      if (value.type === 'array') {
+        count += value.length * value.size;
+      } else {
+        count += value.length;
+      }
     }
 
     if (this.calcBytesInPacket() === count) return null;

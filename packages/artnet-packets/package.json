@@ -1,11 +1,12 @@
 {
   "name": "@rtf-dm/artnet-packets",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "ArtNet packets package for protocol version 14",
   "main": "build/index.js",
   "types": "build/types",
   "keywords": [
     "ArtNet",
+    "ArtNet Packets",
     "DMX",
     "DMX512"
   ],
@@ -16,7 +17,7 @@
   "author": "Rize-The-Flag",
   "license": "MIT",
   "dependencies": {
-    "@rtf-dm/protocol": "^0.3.2"
+    "@rtf-dm/protocol": "^0.4.1"
   },
   "files": [
     "build"

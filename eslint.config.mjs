@@ -2,7 +2,6 @@
 
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import * as path from 'path';
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -30,12 +29,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: [
-        '**/*.d.ts',
-      '**/build/**',
-      '**/*.js',
-      'eslint.config.mjs',
-      '**/node_modules'
-    ],
+    ignores: ['**/*.d.ts', '**/build/**', '**/*.js', 'eslint.config.mjs', '**/node_modules', '**/*.test.ts'],
   }
 );

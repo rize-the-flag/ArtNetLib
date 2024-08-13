@@ -1,8 +1,6 @@
 import { ArtNetPacket } from '../common/art-net-packet';
 import { OP_CODE, PROTOCOL_VERSION } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
-import Buffer from 'node:buffer';
-import { PollReplyPacketPayload } from '../poll-reply/poll-reply.interface';
 import { SyncPacketPayload } from './sync.interface';
 
 export class Sync extends ArtNetPacket<SyncPacketPayload> {

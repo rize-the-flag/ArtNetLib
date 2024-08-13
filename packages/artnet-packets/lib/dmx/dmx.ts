@@ -18,7 +18,7 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
     ['subNet', { length: 1, type: 'number' }],
     ['net', { length: 1, type: 'number' }],
     ['length', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['dmxData', { length: Dmx.DMX_CHANNEL_MAX, type: 'array' }],
+    ['dmxData', { length: Dmx.DMX_CHANNEL_MAX, type: 'array', size: 1 }],
   ]);
 
   constructor(payload: Partial<DmxPacketPayload> = {}) {
@@ -34,7 +34,7 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
       ...payload,
     };
 
-    Dmx.schemaDefault.setValue('dmxData', { length, type: 'array' });
+    Dmx.schemaDefault.setValue('dmxData', { length, type: 'array', size: 1 });
 
     super(OP_CODE.DMX, dmxPacket, Dmx.schemaDefault);
   }
@@ -106,7 +106,7 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
 
     const schemaWithHeader = new Schema([...Dmx.headerSchema, ...Dmx.schemaDefault]);
 
-    schemaWithHeader.setValue('dmxData', { length: dmxDataLength, type: 'array' });
+    schemaWithHeader.setValue('dmxData', { length: dmxDataLength, type: 'array', size: 1 });
     return new Dmx(decode(data, schemaWithHeader));
   }
 }

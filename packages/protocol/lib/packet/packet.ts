@@ -1,6 +1,6 @@
-import { PacketPayload } from './types';
-import { decode, encode } from './encoder/encoder';
-import { Schema } from './schema/schema';
+import { PacketPayload } from '../types';
+import { decode, encode } from '../encoder/encoder';
+import { Schema } from '../schema/schema';
 
 export abstract class Packet<TPayload extends PacketPayload> {
   protected payload: TPayload;

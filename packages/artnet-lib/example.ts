@@ -1,5 +1,5 @@
 import { ArtNetImpl, NodeStatusPayload } from './index';
-import { DmxPacket } from '@rtf-dm/artnet-packets';
+import { Dmx, DmxPacketPayload, PROTOCOL_VERSION } from '@rtf-dm/artnet-packets';
 
 void (async () => {
   const artnet = new ArtNetImpl({
@@ -96,6 +96,18 @@ void (async () => {
   const sentBytesArray = await artnet.nodeManager.syncAllNodes();
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`${sentBytesArray} bytes was sent`);
+
+  const dmxPacketPayload: DmxPacketPayload = {
+    protoVersion: PROTOCOL_VERSION,
+    net: 6,
+    length: 16,
+    subNet: 1,
+    sequence: 2,
+    physical: 3,
+    dmxData: new Array<number>(16).fill(255, 0, 16),
+  };
+
+  await artnet.communicator.sendBroadcast(new Dmx(dmxPacketPayload).encode());
 
   await artnet.dispose();
 })().then(async () => {

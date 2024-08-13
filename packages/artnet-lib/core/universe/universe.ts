@@ -4,7 +4,7 @@ import { ArtNetLibError } from '../lib-error';
 import { ThrowsException, valueOf } from '../types';
 import { Log } from '../logger';
 import { SupportedDevices } from '../device/common/device-contracts';
-import { DmxPacket } from '@rtf-dm/artnet-packets';
+import { Dmx } from '@rtf-dm/artnet-packets';
 
 export class Universe {
   private readonly devices: InstanceType<valueOf<SupportedDevices>>[] = [];
@@ -14,7 +14,7 @@ export class Universe {
   constructor(name: string, controlPacket?: DeviceControlPacket, maxDMXLength = 512) {
     this.controlPacket =
       controlPacket ??
-      new DmxPacket({
+      new Dmx({
         length: maxDMXLength,
       });
     this.name = name;

@@ -1,10 +1,10 @@
-import { ArtNetPacket } from './common/art-net-packet';
-import { ARTNET_PORT, OP_CODE } from './constants';
-import { PollReplyPacketPayload } from './common/packet.interface';
+import { ArtNetPacket } from '../common/art-net-packet';
+import { ARTNET_PORT, OP_CODE } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
 import Buffer from 'node:buffer';
+import { PollReplyPacketPayload } from './poll-reply.interface';
 
-export class PollReplyPacket extends ArtNetPacket<PollReplyPacketPayload> {
+export class PollReply extends ArtNetPacket<PollReplyPacketPayload> {
   //order of schema fields make sense do not change it!!!
   static schemaDefault = new Schema([
     ['ipAddress', { length: 4, type: 'array' }],
@@ -76,15 +76,18 @@ export class PollReplyPacket extends ArtNetPacket<PollReplyPacketPayload> {
       ...payload,
     };
 
-    super(OP_CODE.POLL_REPLY, pollReplyPacketPayload, PollReplyPacket.schemaDefault);
+    super(OP_CODE.POLL_REPLY, pollReplyPacketPayload, PollReply.schemaDefault);
   }
 
   static is(data: Buffer): boolean {
     return super.is(data) && ArtNetPacket.readPacketOpCode(data) === OP_CODE.POLL_REPLY;
   }
 
-  public static create(data: Buffer, schema: Schema<PollReplyPacketPayload> = PollReplyPacket.schemaDefault): PollReplyPacket | null {
-    if (PollReplyPacket.is(data)) return new PollReplyPacket(decode(data, schema));
-    return null;
+  public static create(data: Buffer): PollReply | null {
+    if (!PollReply.is(data)) return null;
+
+    const schemaWithHeader = new Schema([...PollReply.headerSchema, ...PollReply.schemaDefault]);
+
+    return new PollReply(decode(data, schemaWithHeader));
   }
 }

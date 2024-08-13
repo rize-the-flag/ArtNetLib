@@ -1,11 +1,12 @@
-import { ArtNetPacket } from './common/art-net-packet';
-import { OP_CODE, PROTOCOL_VERSION } from './constants';
-import { DmxPacketPayload } from './common/packet.interface';
-import { ThrowsException } from './types';
+import { ArtNetPacket } from '../common/art-net-packet';
+import { OP_CODE, PROTOCOL_VERSION } from '../constants';
+import { ThrowsException } from '../types';
 import { decode, Schema } from '@rtf-dm/protocol';
-import { clamp } from './common/helpers';
+import { clamp } from '../common/helpers';
+import { DmxPacketPayload } from './dmx.interface';
+import { HeaderPayload } from '../common/packet.interface';
 
-export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
+export class Dmx extends ArtNetPacket<DmxPacketPayload> {
   static readonly DMX_CHANNEL_MAX = 512;
   static readonly DMX_VALUE_MAX = 255;
 
@@ -17,11 +18,11 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
     ['subNet', { length: 1, type: 'number' }],
     ['net', { length: 1, type: 'number' }],
     ['length', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['dmxData', { length: DmxPacket.DMX_CHANNEL_MAX, type: 'array' }],
+    ['dmxData', { length: Dmx.DMX_CHANNEL_MAX, type: 'array' }],
   ]);
 
   constructor(payload: Partial<DmxPacketPayload> = {}) {
-    const length = payload.length ?? DmxPacket.DMX_CHANNEL_MAX;
+    const length = payload.length ?? Dmx.DMX_CHANNEL_MAX;
     const dmxPacket: DmxPacketPayload = {
       protoVersion: PROTOCOL_VERSION,
       net: 0,
@@ -33,9 +34,9 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
       ...payload,
     };
 
-    DmxPacket.schemaDefault.setValue('dmxData', { length, type: 'array' });
+    Dmx.schemaDefault.setValue('dmxData', { length, type: 'array' });
 
-    super(OP_CODE.DMX, dmxPacket, DmxPacket.schemaDefault);
+    super(OP_CODE.DMX, dmxPacket, Dmx.schemaDefault);
   }
 
   static is(data: Buffer): boolean {
@@ -43,8 +44,14 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
   }
 
   static getDmxDataLen(data: Buffer) {
-    if (!DmxPacket.is(data)) return null;
-    return Number(data.readUInt16BE(DmxPacket.schemaDefault.getValue('length')?.length));
+    if (!Dmx.is(data)) return null;
+
+    const dmxDataLengthOffset = Dmx.schemaDefault.getOffsetOf('length');
+
+    if (dmxDataLengthOffset === Dmx.schemaDefault.calcBytesInPacket()) return null;
+    if (dmxDataLengthOffset === null) return null;
+
+    return data.readUInt16BE(dmxDataLengthOffset + Dmx.getHeaderLength());
   }
 
   public setNet(net = 0): this {
@@ -71,27 +78,35 @@ export class DmxPacket extends ArtNetPacket<DmxPacketPayload> {
   }
 
   public static clampToDmxRange(channel: number, value: number): [number, number] {
-    const channelInRange = clamp(0, DmxPacket.DMX_CHANNEL_MAX, channel);
-    const valueInRange = clamp(0, DmxPacket.DMX_VALUE_MAX, value);
+    const channelInRange = clamp(0, Dmx.DMX_CHANNEL_MAX, channel);
+    const valueInRange = clamp(0, Dmx.DMX_VALUE_MAX, value);
     return [channelInRange, valueInRange];
   }
 
   public setChannel(channel: number, value: number): this {
-    const [channelInRange, valueInRange] = DmxPacket.clampToDmxRange(channel, value);
+    const [channelInRange, valueInRange] = Dmx.clampToDmxRange(channel, value);
     this.payload.dmxData[channelInRange] = valueInRange;
     return this;
   }
 
   public setChannels(data: number[]): ThrowsException<void> {
-    this.payload.dmxData = data.map((x) => clamp(0, DmxPacket.DMX_CHANNEL_MAX, x));
+    this.payload.dmxData = data.map((x) => clamp(0, Dmx.DMX_CHANNEL_MAX, x));
   }
 
   public getChannelValue(channel: number): number {
     return this.payload.dmxData[channel];
   }
 
-  public static create(data: Buffer, schema: Schema<DmxPacketPayload>): DmxPacket | null {
-    if (DmxPacket.is(data)) return new DmxPacket(decode(data, schema));
-    return null;
+  public static create(data: Buffer): Dmx | null {
+    if (!Dmx.is(data)) return null;
+
+    const dmxDataLength = Dmx.getDmxDataLen(data);
+
+    if (!dmxDataLength) return null;
+
+    const schemaWithHeader = new Schema([...Dmx.headerSchema, ...Dmx.schemaDefault]);
+
+    schemaWithHeader.setValue('dmxData', { length: dmxDataLength, type: 'array' });
+    return new Dmx(decode(data, schemaWithHeader));
   }
 }

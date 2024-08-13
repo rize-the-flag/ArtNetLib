@@ -1,6 +1,6 @@
 import { ThrowsException } from '../types';
 import { SupportedDevices } from './common/device-contracts';
-import { DmxPacket } from '@rtf-dm/artnet-packets';
+import { Dmx } from '@rtf-dm/artnet-packets';
 
 export interface ArtNetDeviceAction {
   actionName: string;
@@ -21,7 +21,7 @@ export interface ArtNetDevice {
   getSupportedApi(): string;
 }
 
-export type DeviceControlPacket = DmxPacket; // or Nzsc packet ?
+export type DeviceControlPacket = Dmx; // or Nzsc packet ?
 
 export interface DeviceApiValidationError {
   message?: string;

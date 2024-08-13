@@ -1,10 +1,20 @@
-import { ArtNetPacket } from './common/art-net-packet';
-import { PROTOCOL_VERSION } from './constants';
-import { DiagnosisPolicy, DiagPriority, PollPacketPayload, SendArtPollReplyPolicy } from './common/packet.interface';
-import { DIAG_PRIORITY, NODE_BEHAVIOUR_MASK, OP_CODE } from './constants';
+import { ArtNetPacket } from '../common/art-net-packet';
+import { PROTOCOL_VERSION } from '../constants';
+import { SendArtPollReplyPolicy } from '../common/packet.interface';
+import { OP_CODE } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
+import { DiagnosisPolicy, DiagPriority, PollPacketPayload } from './poll.interface';
+import { DIAG_PRIORITY, NODE_BEHAVIOUR_MASK } from './constants';
 
-export class PollPacket extends ArtNetPacket<PollPacketPayload> {
+export class Poll extends ArtNetPacket<PollPacketPayload> {
+  private static readonly schemaDefault = new Schema<PollPacketPayload>([
+    ['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
+    ['flags', { length: 1, type: 'number' }],
+    ['diagPriority', { length: 1, type: 'number' }],
+    ['targetPortAddressTop', { length: 2, type: 'number', byteOrder: 'BE' }],
+    ['targetPortAddressBottom', { length: 2, type: 'number', byteOrder: 'BE' }],
+  ]);
+
   constructor(payload: Partial<PollPacketPayload> = {}) {
     const pollPacketPayload: PollPacketPayload = {
       protoVersion: PROTOCOL_VERSION,
@@ -15,16 +25,7 @@ export class PollPacket extends ArtNetPacket<PollPacketPayload> {
       ...payload,
     };
 
-    //order of schema fields make sense do not change it!!!
-    const pollPacketSchema = new Schema<PollPacketPayload>([
-      ['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
-      ['flags', { length: 1, type: 'number' }],
-      ['diagPriority', { length: 1, type: 'number' }],
-      ['targetPortAddressTop', { length: 2, type: 'number', byteOrder: 'BE' }],
-      ['targetPortAddressBottom', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ]);
-
-    super(OP_CODE.POLL, pollPacketPayload, pollPacketSchema);
+    super(OP_CODE.POLL, pollPacketPayload, Poll.schemaDefault);
 
     this.sendMeDiagnostics(true).setDiagnosticsPolicy('BROADCAST').setArtPollReplyPolicy('ON_NODE_CONDITION_CHANGE');
   }
@@ -79,8 +80,11 @@ export class PollPacket extends ArtNetPacket<PollPacketPayload> {
     return super.is(data) && ArtNetPacket.readPacketOpCode(data) === OP_CODE.POLL;
   }
 
-  public static create(data: Buffer, schema: Schema<PollPacketPayload>): PollPacket | null {
-    if (!PollPacket.is(data)) return null;
-    return new PollPacket(decode(data, schema));
+  public static create(data: Buffer): Poll | null {
+    if (!Poll.is(data)) return null;
+
+    const schemaWithHeader = new Schema([...Poll.headerSchema, ...Poll.schemaDefault]);
+
+    return new Poll(decode(data, schemaWithHeader));
   }
 }

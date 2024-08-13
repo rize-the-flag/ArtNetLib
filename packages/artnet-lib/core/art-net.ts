@@ -13,13 +13,13 @@ export class ArtNetImpl {
   private readonly deviceRegistry = DeviceFactory.getInstance();
   private readonly universes: Universe[] = [];
   private readonly _nodeManager: NodeManager;
-  private readonly communicator: NetworkCommunicator;
+  private readonly _communicator: NetworkCommunicator;
   private readonly _discovery: Discovery;
 
   constructor(opts?: LibConfig) {
-    this.communicator = new NetworkCommunicator(opts?.network);
-    this._nodeManager = new NodeManager(this.communicator);
-    this._discovery = new Discovery(this._nodeManager, this.communicator, opts?.discovery?.sendReply);
+    this._communicator = new NetworkCommunicator(opts?.network);
+    this._nodeManager = new NodeManager(this._communicator);
+    this._discovery = new Discovery(this._nodeManager, this._communicator, opts?.discovery?.sendReply);
   }
 
   get nodeManager() {
@@ -28,6 +28,10 @@ export class ArtNetImpl {
 
   get discovery() {
     return this._discovery;
+  }
+
+  get communicator() {
+    return this._communicator;
   }
 
   private isGroupAction(payload: UniverseAction): payload is UniverseActionGroup {
@@ -39,7 +43,7 @@ export class ArtNetImpl {
    * @return {Promise<string>} Discovery status
    */
   public async init(): Promise<string> {
-    await this.communicator.init();
+    await this._communicator.init();
     this._discovery.run();
     return this._discovery.getStatus();
   }
@@ -69,7 +73,7 @@ export class ArtNetImpl {
    * @return {void}
    */
   public async changeNetwork(config: NetworkConfig): Promise<void> {
-    await this.communicator.changeNetwork(config);
+    await this._communicator.changeNetwork(config);
     this.discovery.updateReplyInfo();
   }
 
@@ -91,7 +95,7 @@ export class ArtNetImpl {
    * @return {NetworkConfig}
    */
   public getBoundNetworkInfo(): NetworkConfig {
-    return this.communicator.boundNetworkInfo;
+    return this._communicator.boundNetworkInfo;
   }
 
   /**
@@ -111,7 +115,7 @@ export class ArtNetImpl {
    * @return {Promise<number>}
    */
   public sendBroadcast(universe: Universe): Promise<number> {
-    return this.communicator.sendBroadcast(universe.buildDmxData());
+    return this._communicator.sendBroadcast(universe.buildDmxData());
   }
 
   /**
@@ -333,6 +337,6 @@ export class ArtNetImpl {
 
   dispose(): Promise<void> {
     this._discovery.stop();
-    return this.communicator.dispose();
+    return this._communicator.dispose();
   }
 }

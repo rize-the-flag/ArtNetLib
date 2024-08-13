@@ -1,7 +1,8 @@
-import { ArtNetPacket } from './common/art-net-packet';
-import { AddressPacketPayload, DmxPacketPayload } from './common/packet.interface';
-import { OP_CODE, PROTOCOL_VERSION } from './constants';
+import { ArtNetPacket } from '../common/art-net-packet';
+import { OP_CODE, PROTOCOL_VERSION } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
+import { DmxPacketPayload } from '../dmx/dmx.interface';
+import { AddressPacketPayload } from './address.interface';
 
 export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
   //order of schema fields makes sense do not change it!!!
@@ -56,8 +57,12 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
     return super.is(data) && ArtNetPacket.readPacketOpCode(data) === OP_CODE.ADDRESS;
   }
 
-  public static create(data: Buffer, schema: Schema<DmxPacketPayload>): AddressPacket | null {
-    if (AddressPacket.is(data)) return new AddressPacket(decode(data, schema));
+  public static create(data: Buffer): AddressPacket | null {
+    const schemaWithHeader = new Schema([...AddressPacket.headerSchema, ...AddressPacket.schemaDefault]);
+
+    if (AddressPacket.is(data)) {
+      return new AddressPacket(decode(data, schemaWithHeader));
+    }
     return null;
   }
 }

@@ -3,7 +3,7 @@ import { HeaderPayload, OpCode } from './packet.interface';
 import { Packet, PacketPayload, Schema } from '@rtf-dm/protocol';
 
 export abstract class ArtNetPacket<TPayload extends PacketPayload> extends Packet<TPayload & HeaderPayload> {
-  private static headerSchema = new Schema([
+  protected static headerSchema = new Schema([
     ['ID', { length: 8, type: 'string' }],
     ['opCode', { length: 2, type: 'number', byteOrder: 'LE' }],
   ]);
@@ -24,7 +24,7 @@ export abstract class ArtNetPacket<TPayload extends PacketPayload> extends Packe
     return ArtNetPacket.isArtNetPacket(data);
   }
 
-  static getHeaderLength(): number | undefined {
+  static getHeaderLength(): number {
     const ID = ArtNetPacket.headerSchema.getValue('ID')?.length;
     const opCode = ArtNetPacket.headerSchema.getValue('opCode')?.length;
     if (!ID || !opCode) throw new Error("ID or opCode wasn't found in header");

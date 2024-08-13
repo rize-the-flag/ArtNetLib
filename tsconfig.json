@@ -3,22 +3,16 @@
     "target": "ES2022",
     "module": "CommonJS",
     "resolveJsonModule": true,
-    "outDir": "./build",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "sourceMap": false,
-    "baseUrl": "./",
+    "baseUrl": "./"
   },
   "paths": {
-    "@packages/*": [
-      "./packages/*"
-    ]
+    "@packages/*": ["./packages/*"]
   },
-  "exclude": [
-    "./build",
-    "./dist"
-  ]
+  "exclude": ["./build", "./dist", "./eslint.config.mjs"]
 }

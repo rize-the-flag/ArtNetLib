@@ -1,37 +1,35 @@
-import {ThrowsException} from '../types';
-import {SupportedDevices} from "./common/device-contracts";
-import {DmxPacket} from "@rtf-dm/artnet-packets";
+import { ThrowsException } from '../types';
+import { SupportedDevices } from './common/device-contracts';
+import { Dmx } from '@rtf-dm/artnet-packets';
 
 export interface ArtNetDeviceAction {
-    actionName: string;
-    parameters: {
-        [param: string]: string | number | number[];
-    };
+  actionName: string;
+  parameters: Record<string, string | number | number[]>;
 }
 
 export interface ArtNetDevice {
-    getName(): string;
+  getName(): string;
 
-    getDmxData(): number[];
+  getDmxData(): number[];
 
-    getDmxDataSize(): number;
+  getDmxDataSize(): number;
 
-    setAction(action: ArtNetDeviceAction): ThrowsException<void>;
+  setAction(action: ArtNetDeviceAction): ThrowsException<void>;
 
-    setActions(actions: ArtNetDeviceAction[]): ThrowsException<void>;
+  setActions(actions: ArtNetDeviceAction[]): ThrowsException<void>;
 
-    getSupportedApi(): string;
+  getSupportedApi(): string;
 }
 
-export type DeviceControlPacket = DmxPacket; // or Nzsc packet ?
+export type DeviceControlPacket = Dmx; // or Nzsc packet ?
 
 export interface DeviceApiValidationError {
-    message?: string;
-    api?: string;
-    instance: string;
+  message?: string;
+  api?: string;
+  instance: string;
 }
 
-export type DeviceConstructorArgs = {
-    deviceDriver: keyof SupportedDevices,
-    numChannels?: number
+export interface DeviceConstructorArgs {
+  deviceDriver: keyof SupportedDevices;
+  numChannels?: number;
 }

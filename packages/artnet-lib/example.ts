@@ -1,7 +1,7 @@
-import {ArtNetImpl} from './index';
-import {DmxPacket} from "@rtf-dm/artnet-packets";
+import { ArtNetImpl, NodeStatusPayload } from './index';
+import { Dmx, DmxPacketPayload, PROTOCOL_VERSION } from '@rtf-dm/artnet-packets';
 
-(async () => {
+void (async () => {
   const artnet = new ArtNetImpl({
     discovery: {
       sendReply: true,
@@ -14,40 +14,52 @@ import {DmxPacket} from "@rtf-dm/artnet-packets";
   // There are a lot of fields that could be set.
   // Refer to ArtPollReply packet definition;
   artnet.discovery.setReplyInfo({
-    ipAddress: '192.168.1.23'.split('.').map(oct => parseInt(oct)),
-  })
+    ipAddress: '192.168.1.23'.split('.').map((oct) => parseInt(oct)),
+  });
 
   const [node1] = await artnet.nodeManager.waitFor('NEW_NODE_REGISTERED');
 
   // Each time when node status or settings changed, 'NODE_STATUS_UPDATED' event fired
-  artnet.nodeManager.addListener('NODE_STATUS_UPDATED', payload => console.log(`node updated: ${payload.name}`));
+  artnet.nodeManager.addListener('NODE_STATUS_UPDATED', (payload: NodeStatusPayload) => {
+    console.log(`node updated: ${payload.name}`);
+  });
 
   // When node didn't response with poll reply for some time, it marked as dead and 'NODE_IS_DEAD' event fired;
-  artnet.nodeManager.addListener('NODE_IS_DEAD', payload => console.log(`node dead: ${payload.name}`));
+  artnet.nodeManager.addListener('NODE_IS_DEAD', (payload: NodeStatusPayload) => {
+    console.log(`node dead: ${payload.name}`);
+  });
 
-  await new Promise(resolve => setTimeout(() => resolve(1), 5000)); //Timeout to get node updated event
+  await new Promise((resolve) =>
+    setTimeout(() => {
+      resolve(1);
+    }, 5000)
+  ); //Timeout to get node updated event
 
   artnet.discovery.sendArtPollReply = false; //disable reply on poll to demonstrate node dead event;
 
-  await new Promise(resolve => setTimeout(() => resolve(1), 10000)); //Timeout to get node dead event
+  await new Promise((resolve) =>
+    setTimeout(() => {
+      resolve(1);
+    }, 10000)
+  ); //Timeout to get node dead event
 
   artnet.discovery.sendArtPollReply = true;
 
   //Add Devices to created Universe mixpanel150 ([index 0]) - Generic ([index 1]) - MixPanel150 ([index 2]) - Generic([index 3]) ... e.t.c.
   const verse = artnet.createUniverse('my-Universe', [
-    {deviceDriver: 'Generic', numChannels: 5},
-    {deviceDriver: 'MixPanel150'},
-    {deviceDriver: 'Generic', numChannels: 12},
-    {deviceDriver: 'Generic', numChannels: 2},
+    { deviceDriver: 'Generic', numChannels: 5 },
+    { deviceDriver: 'MixPanel150' },
+    { deviceDriver: 'Generic', numChannels: 12 },
+    { deviceDriver: 'Generic', numChannels: 2 },
   ]);
 
-  if (!verse) return null //Universe with the name 'my-Universe' already exists;
+  if (!verse) return null; //Universe with the name 'my-Universe' already exists;
 
   //Set action for device group which implemented 'MixPanel150' interface and call api
-  verse.getDevice('MixPanel150').forEach(device => {
-    device.setBrightness({percent: 100});
-    device.setLightMode({mode: 'BOOST'})
-  })
+  verse.getDevice('MixPanel150').forEach((device) => {
+    device.setBrightness({ percent: 100 });
+    device.setLightMode({ mode: 'BOOST' });
+  });
 
   //Get a device by index 0 and assume it as a 'Generic' device
   verse.getDevice<'Generic'>(0)?.setChannels({
@@ -73,20 +85,32 @@ import {DmxPacket} from "@rtf-dm/artnet-packets";
   // Interface of this method will be changed in the nearest future (node.name => node.macAddress)
   artnet.nodeManager.attachUniverse(node1.name, 0, verse);
 
-
   // Broadcast a universe devices state to entire network.
   // Use this api only for detached universes. Since for controlled universes this doesn't make sense
   const sentBytes = await artnet.sendBroadcast(verse);
 
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`${sentBytes} bytes was sent`);
 
   //Send all attached universes of all nodes and all ports
   const sentBytesArray = await artnet.nodeManager.syncAllNodes();
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`${sentBytesArray} bytes was sent`);
+
+  const dmxPacketPayload: DmxPacketPayload = {
+    protoVersion: PROTOCOL_VERSION,
+    net: 6,
+    length: 16,
+    subNet: 1,
+    sequence: 2,
+    physical: 3,
+    dmxData: new Array<number>(16).fill(255, 0, 16),
+  };
+
+  await artnet.communicator.sendBroadcast(new Dmx(dmxPacketPayload).encode());
 
   await artnet.dispose();
 })().then(async () => {
-
   const artNet = new ArtNetImpl({
     discovery: {
       sendReply: true,
@@ -95,14 +119,17 @@ import {DmxPacket} from "@rtf-dm/artnet-packets";
 
   await artNet.init();
 
-  artNet.nodeManager.waitFor('NEW_NODE_REGISTERED').then(async ([nodeInfo]) => {
-
-    artNet.createUniverse('my_universe', [{
-      deviceDriver: 'Generic', numChannels: 10,
-    }, {
-      deviceDriver: 'Generic', numChannels: 10,
-    }]);
-
+  void artNet.nodeManager.waitFor('NEW_NODE_REGISTERED').then(async ([nodeInfo]) => {
+    artNet.createUniverse('my_universe', [
+      {
+        deviceDriver: 'Generic',
+        numChannels: 10,
+      },
+      {
+        deviceDriver: 'Generic',
+        numChannels: 10,
+      },
+    ]);
 
     await artNet.broadcastUniverse({
       type: 'Group',
@@ -148,8 +175,10 @@ import {DmxPacket} from "@rtf-dm/artnet-packets";
       universeName: 'my_universe',
       deviceGroup: 'Generic',
       action: {
-        actionName: 'setChannel', parameters: {
-          channel: 5, value: 10,
+        actionName: 'setChannel',
+        parameters: {
+          channel: 5,
+          value: 10,
         },
       },
     });

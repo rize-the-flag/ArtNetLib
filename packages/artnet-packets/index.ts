@@ -1,17 +1,21 @@
-export {AddressPacket} from './lib/address-packet'
-export {SyncPacket} from './lib/sync-packet'
-export {DiagDataPacket} from './lib/diag-data-packet'
-export {PollReplyPacket} from './lib/poll-reply-packet'
-export {DmxPacket} from './lib/dmx-packet'
-export {PollPacket} from './lib/poll-packet'
+export { AddressPacket } from './lib/address/address-packet';
+export { Sync } from './lib/sync/sync';
+export { DiagData } from './lib/diag-data/diag-data';
+export { PollReply } from './lib/poll-reply/poll-reply';
+export { Dmx } from './lib/dmx/dmx';
+export { Poll } from './lib/poll/poll';
+export { IpProgPacket } from './lib/ip-prog/ip-prog';
+export { IpProgPayload } from './lib/ip-prog/ip-prog.interface';
 
-export {
-  PollPacketPayload,
-  DmxPacketPayload,
-  AddressPacketPayload,
-  PollReplyPacketPayload,
-  DiagDataPayload,
-  SyncPacketPayload
-} from './lib/common/packet.interface'
+export { OP_CODE, ARTNET_PACKET_ID, ARTNET_PORT, PROTOCOL_VERSION } from './lib/constants';
+export { PollReplyPacketPayload } from './lib/poll-reply/poll-reply.interface';
+export { DmxPacketPayload } from './lib/dmx/dmx.interface';
+export { SyncPacketPayload } from './lib/sync/sync.interface';
+export { PollPacketPayload } from './lib/poll/poll.interface';
+export { DiagDataPayload } from './lib/diag-data/diag-data.interface';
+export { AddressPacketPayload } from './lib/address/address.interface';
 
-export * from './lib/constants'
+export { NODE_BEHAVIOUR_MASK } from './lib/poll/constants';
+export { DIAGNOSTICS_MESSAGE_POLICY } from './lib/poll/constants';
+export { DIAG_PRIORITY } from './lib/poll/constants';
+export { ARTPOLL_REPLY_SEND_POLICY } from './lib/poll/constants';

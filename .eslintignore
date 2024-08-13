@@ -2,3 +2,5 @@
 **/*.http
 **/*.tsbuildinfo
 **/*.map
+*.d.ts
+eslint.config.mjs

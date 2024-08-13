@@ -1,24 +1,23 @@
-import {DEFAULT_POLL_INTERVAL} from '../constants';
-import {RemoteInfo} from 'dgram';
-import {InjectLogger} from '../logger';
-import {clearInterval} from 'timers';
-import {DiscoveryStatus} from './discovery.interface';
-import {Communicator} from '../communicator/communicator.interface';
-import {NodeManager} from '../node/node-manager';
-import {LoggerInterface} from '../logger/logger.interface';
-import {PollPacket, PollReplyPacket, PollReplyPacketPayload} from "@rtf-dm/artnet-packets";
+import { DEFAULT_POLL_INTERVAL } from '../constants';
+import { RemoteInfo } from 'dgram';
+import { InjectLogger } from '../logger';
+import { clearInterval } from 'timers';
+import { DiscoveryStatus } from './discovery.interface';
+import { Communicator } from '../communicator/communicator.interface';
+import { NodeManager } from '../node/node-manager';
+import { LoggerInterface } from '../logger/logger.interface';
+import { Poll, PollReply, PollReplyPacketPayload } from '@rtf-dm/artnet-packets';
 
 export class Discovery {
   @InjectLogger private logger: LoggerInterface;
 
   accessor sendArtPollReply: boolean;
 
-  private isActive: boolean = false;
+  private isActive = false;
   private pollTimer: NodeJS.Timer;
   private pollingInterval: number = DEFAULT_POLL_INTERVAL;
 
-  private pollReplyPacket: PollReplyPacket;
-  private readonly pollPacket: PollPacket = new PollPacket();
+  private pollReplyPacket: PollReply;
   private readonly communicator: Communicator;
   private readonly nodeManager: NodeManager;
 
@@ -32,34 +31,27 @@ export class Discovery {
   }
 
   public setReplyInfo(payload?: Partial<Omit<PollReplyPacketPayload, 'macAddress'>>) {
-    const communicatorBoundIp = this.communicator
-                                    .boundNetworkInfo
-                                    .networkIp
-                                    .split('.')
-                                    .map((n) => parseInt(n));
+    const communicatorBoundIp = this.communicator.boundNetworkInfo.networkIp.split('.').map((n) => parseInt(n));
 
-    this.pollReplyPacket = new PollReplyPacket({
+    this.pollReplyPacket = new PollReply({
       ...payload,
-      macAddress: this.communicator
-                      .selfMacAddress
-                      .split(':')
-                      .map(v => parseInt(v, 16)),
+      macAddress: this.communicator.selfMacAddress.split(':').map((v) => parseInt(v, 16)),
       port: payload?.port ?? this.communicator.boundNetworkInfo.port,
       ipAddress: payload?.ipAddress ?? communicatorBoundIp,
     });
   }
 
   public updateReplyInfo(): void {
-    return this.setReplyInfo();
+    this.setReplyInfo();
   }
 
   private discoveryLoop = () => {
     if (this.isActive) {
-      const packet = this.pollPacket.encode();
+      const packet = new Poll().encode();
       void this.communicator.sendBroadcast(packet);
       this.pollTimer = setTimeout(this.discoveryLoop, this.pollingInterval);
     }
-  }
+  };
 
   public run(): void {
     this.stop();
@@ -83,18 +75,18 @@ export class Discovery {
     return this.isActive ? 'RUNNING' : 'SUSPENDED';
   }
 
-  private handleArtPoll = async (data: Buffer, {address, port}: RemoteInfo): Promise<void> => {
-    if (!PollPacket.is(data) || !this.sendArtPollReply) return;
+  private handleArtPoll = (data: Buffer, { address, port }: RemoteInfo): void => {
+    if (!Poll.is(data) || !this.sendArtPollReply) return;
 
     this.logger.warn('ArtPoll handling for debug purposes only, disable after debug completed');
     this.logger.info(`Received ArtPoll packet from ${address}`);
-    this.logger.info(`Response with ArtPollReply packet to ${address}:${port}`);
+    this.logger.info(`Response with ArtPollReply packet to ${address}:${String(port)}`);
 
     void this.communicator.send(this.pollReplyPacket.encode(), address);
   };
 
   private handleArtNetDeviceReply = (data: Buffer, remoteInfo: RemoteInfo): void => {
-    if (!PollReplyPacket.is(data)) return;
+    if (!PollReply.is(data)) return;
 
     this.logger.info(`Received ArtPollReply packet from ${remoteInfo.address}`);
 

@@ -1,10 +1,10 @@
-import {SupportedDevices} from './device/common/device-contracts';
-import {ArtNetDeviceAction, DeviceConstructorArgs} from './device/device.interface';
-import {NodeManager} from './node/node-manager';
-import {Discovery} from './discovery/discovery';
-import {Universe} from './universe/universe';
-import {NetworkConfig, valueOf} from './types';
-import {Node} from './node/node';
+import { SupportedDevices } from './device/common/device-contracts';
+import { ArtNetDeviceAction, DeviceConstructorArgs } from './device/device.interface';
+import { NodeManager } from './node/node-manager';
+import { Discovery } from './discovery/discovery';
+import { Universe } from './universe/universe';
+import { NetworkConfig, valueOf } from './types';
+import { Node } from './node/node';
 
 export interface UniverseActionGroup {
   type: 'Group';
@@ -46,24 +46,37 @@ export interface ArtNet {
 
   getSupportedDevices(): string[];
 
-  addDevice(universeName: string, device: DeviceConstructorArgs): {
-    universe: Universe, deviceInstance: InstanceType<valueOf<SupportedDevices>>
+  addDevice(
+    universeName: string,
+    device: DeviceConstructorArgs
+  ): {
+    universe: Universe;
+    deviceInstance: InstanceType<valueOf<SupportedDevices>>;
   } | null;
 
-  setDevice(universeName: string, deviceIndex: number, device: DeviceConstructorArgs):  {
-    universe: Universe, deviceInstance: InstanceType<valueOf<SupportedDevices>>
+  setDevice(
+    universeName: string,
+    deviceIndex: number,
+    device: DeviceConstructorArgs
+  ): {
+    universe: Universe;
+    deviceInstance: InstanceType<valueOf<SupportedDevices>>;
   } | null;
 
   removeUniverse(name: string): Universe | null;
 
-  attachUniverse(nodeMac: string, nodePort: number, universeName: string): {
-    universe: Universe,
-    node: Node
+  attachUniverse(
+    nodeMac: string,
+    nodePort: number,
+    universeName: string
+  ): {
+    universe: Universe;
+    node: Node;
   } | null;
 
   setGroupAction(payload: UniverseAction): Universe | null;
 
-  broadcastUniverse(universeAction: UniverseAction): Promise<any>;
+  broadcastUniverse(universeAction: UniverseAction): Promise<number>;
 
   multicastUniverse(universeAction: UniverseAction): Promise<number[][]>;
 

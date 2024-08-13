@@ -1,4 +1,4 @@
-import { PacketPayload, PacketSchemaString, PacketSchemaNumber, PacketSchemaArray, PacketSchemaRecord2 } from '../types';
+import { PacketPayload, PacketSchemaString, PacketSchemaNumber, PacketSchemaArray, PacketSchemaRecord } from '../types';
 import { Schema } from '../schema/schema';
 import { off } from 'process';
 
@@ -95,7 +95,7 @@ function readArrayFromBuffer(buffer: Buffer, schemeRecord: PacketSchemaArray, of
   }
 }
 
-export function getOffsetOf(currentOffset: number, record: PacketSchemaRecord2) {
+export function getOffsetOf(currentOffset: number, record: PacketSchemaRecord) {
   if (record.type !== 'array') return currentOffset + record.length;
   return currentOffset + record.length * record.size;
 }

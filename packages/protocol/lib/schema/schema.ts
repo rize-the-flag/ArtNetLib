@@ -1,4 +1,4 @@
-import { PacketPayload, PacketSchemaFromPayload, PacketSchemaPublic, PacketSchemaRecord2 } from '../types';
+import { PacketPayload, PacketSchemaFromPayload, PacketSchemaPublic, PacketSchemaRecord } from '../types';
 
 export class Schema<TPayload extends PacketPayload> {
   private schema: PacketSchemaFromPayload<TPayload>;
@@ -6,7 +6,7 @@ export class Schema<TPayload extends PacketPayload> {
     this.schema = new Map(structuredClone(schema));
   }
 
-  setValue(key: keyof TPayload, value: PacketSchemaRecord2) {
+  setValue(key: keyof TPayload, value: PacketSchemaRecord) {
     this.schema.set(key, value);
   }
 

@@ -1,14 +1,9 @@
-export type ValidLengthTypes = 'number' | 'string' | 'array';
-
-export interface PacketSchemaRecord<T extends ValidLengthTypes = ValidLengthTypes> {
-  type: 'string' | 'number' | 'array';
-  length: T extends 'number' ? 1 | 2 | 4 | 8 : number;
-  byteOrder?: 'LE' | 'BE';
-}
+export type Encoding = 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'base64url' | 'latin1' | 'binary' | 'hex';
 
 export type PacketSchemaString = {
   type: 'string';
   length: number;
+  encoding: Encoding;
 };
 
 export type PacketSchemaNumberWithByteOrder = {
@@ -45,11 +40,11 @@ export type PacketSchemaArrayWithOutByteOrder = {
 
 export type PacketSchemaArray = PacketSchemaArrayWithByteOrder | PacketSchemaArrayWithOutByteOrder;
 
-export type PacketSchemaRecord2 = PacketSchemaNumber | PacketSchemaArray | PacketSchemaString;
+export type PacketSchemaRecord = PacketSchemaNumber | PacketSchemaArray | PacketSchemaString;
 
 export type PacketPayloadType = string | number | number[] | bigint;
 
 export type PacketPayload = Record<string, PacketPayloadType>;
 
-export type PacketSchemaFromPayload<TPayload> = Map<keyof TPayload, PacketSchemaRecord2>;
-export type PacketSchemaPublic<TPayload> = [keyof TPayload, PacketSchemaRecord2][];
+export type PacketSchemaFromPayload<TPayload> = Map<keyof TPayload, PacketSchemaRecord>;
+export type PacketSchemaPublic<TPayload> = [keyof TPayload, PacketSchemaRecord][];

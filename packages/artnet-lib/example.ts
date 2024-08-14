@@ -1,5 +1,5 @@
 import { ArtNetImpl, NodeStatusPayload } from './index';
-import { Dmx, DmxPacketPayload, PROTOCOL_VERSION } from '@rtf-dm/artnet-packets';
+import { Command, Dmx, DmxPacketPayload, PROTOCOL_VERSION } from '@rtf-dm/artnet-packets';
 
 void (async () => {
   const artnet = new ArtNetImpl({
@@ -107,7 +107,12 @@ void (async () => {
     dmxData: new Array<number>(16).fill(255, 0, 16),
   };
 
-  await artnet.communicator.sendBroadcast(new Dmx(dmxPacketPayload).encode());
+  await artnet.communicator.sendBroadcast(
+    new Command({
+      data: 'SOSI HUI',
+      length: 'SOSI HUI'.length,
+    }).encode()
+  );
 
   await artnet.dispose();
 })().then(async () => {

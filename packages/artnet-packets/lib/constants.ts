@@ -10,4 +10,5 @@ export const OP_CODE = {
   SYNC: 0x5200,
   ADDRESS: 0x6000,
   IP_PROG: 0xf800,
+  COMMAND: 0x2400,
 } as const;

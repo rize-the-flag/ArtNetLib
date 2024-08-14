@@ -21,7 +21,7 @@
   "author": "Rize-The-Flag",
   "license": "MIT",
   "dependencies": {
-    "@rtf-dm/artnet-packets": "^0.3.1",
+    "@rtf-dm/artnet-packets": "^0.4.1",
     "@rtf-dm/common": "^0.1.5",
     "@rtf-dm/typed-emitter": "^0.1.5",
     "tslog": "^4.9.2",

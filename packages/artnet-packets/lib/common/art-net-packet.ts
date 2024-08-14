@@ -4,7 +4,7 @@ import { Packet, PacketPayload, Schema } from '@rtf-dm/protocol';
 
 export abstract class ArtNetPacket<TPayload extends PacketPayload> extends Packet<TPayload & HeaderPayload> {
   protected static headerSchema = new Schema([
-    ['ID', { length: 8, type: 'string' }],
+    ['ID', { length: 8, type: 'string', encoding: 'utf8' }],
     ['opCode', { length: 2, type: 'number', byteOrder: 'LE' }],
   ]);
 

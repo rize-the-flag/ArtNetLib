@@ -23,7 +23,7 @@ describe('Protocol package tests', () => {
     class TestPacket extends Packet<TestPacketPayload> {
       constructor(payload: TestPacketPayload) {
         const schema = new Schema<TestPacketPayload>([
-          ['ID', { length: 5, type: 'string' }],
+          ['ID', { length: 5, type: 'string', encoding: 'utf8' }],
           ['numberField1b', { length: 1, type: 'number' }],
           ['numberField2b', { length: 2, type: 'number', byteOrder: 'LE' }],
           ['numberField4b', { length: 4, type: 'number', byteOrder: 'LE' }],

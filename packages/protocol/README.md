@@ -7,7 +7,6 @@
 
 ```typescript
 import {Packet, encode, decode, Schema} from "@rtf-dm/protocol";
-import {describe} from "@jest/globals";
 
 //1. Describe your packet payload type:
 

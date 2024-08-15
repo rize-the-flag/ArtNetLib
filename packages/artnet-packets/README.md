@@ -67,6 +67,7 @@ socket.on('message', (data: Buffer, remoteInfo: RemoteInfo) => {
   - ArtCommand (Command) - `covered with tests`
   - ArtDiagData (DiagData) - `covered with tests`
   - ArtDmx (Dmx) - `covered with tests`
+  - ArtIpProg - `covered with tests`
   - ArtPoll (Poll) - `covered with tests`
   - ArtPollReply (PollReply) - `covered with tests`
   - ArtSync (Sync) - `no tests`

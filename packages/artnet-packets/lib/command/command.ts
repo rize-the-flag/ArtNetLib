@@ -23,8 +23,6 @@ export class Command extends ArtNetPacket<CommandPayload> {
       ...payload,
     };
 
-    console.log(commandPayload);
-
     Command.schemaDefault.setValue('data', { type: 'string', length, encoding: 'ascii' });
 
     super(OP_CODE.COMMAND, commandPayload, Command.schemaDefault);
@@ -43,10 +41,12 @@ export class Command extends ArtNetPacket<CommandPayload> {
 
   static create(data: Buffer) {
     if (!Command.is(data)) return null;
+
     const length = Command.getDataLength(data);
     if (!length) return null;
 
     Command.schemaDefault.setValue('data', { type: 'string', length, encoding: 'ascii' });
-    return new Command(decode(data, Command.schemaDefault));
+    const schemaWithHeader = new Schema([...Command.headerSchema, ...Command.schemaDefault]);
+    return new Command(decode(data, schemaWithHeader));
   }
 }

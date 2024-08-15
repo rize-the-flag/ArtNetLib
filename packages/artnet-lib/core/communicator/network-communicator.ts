@@ -62,7 +62,9 @@ export class NetworkCommunicator extends TypedEmitter<CommunicatorEvents> implem
 
     const listenEvent = new Promise<void>((resolve) =>
       this.socket.on('listening', () => {
-        this.logger.info(`Starting listen ArtNet packages on ${this.broadcastIpAddress}:${String(this.networkConfig.port)}`);
+        this.logger.info(
+          `Starting listen ArtNet packages on ${this.broadcastIpAddress}:${String(this.networkConfig.port)}`
+        );
         resolve();
       })
     );

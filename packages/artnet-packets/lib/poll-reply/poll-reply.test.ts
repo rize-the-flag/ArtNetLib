@@ -42,7 +42,11 @@ describe('ArtNet PollReply tests', () => {
   test('PollReply encode decode test', () => {
     const pollReply = new PollReply(pollReplyPacketPayload);
     const udpData = pollReply.encode();
-    expect(pollReply.decode(udpData)).toEqual({ ID: ARTNET_PACKET_ID, opCode: OP_CODE.POLL_REPLY, ...pollReplyPacketPayload });
+    expect(pollReply.decode(udpData)).toEqual({
+      ID: ARTNET_PACKET_ID,
+      opCode: OP_CODE.POLL_REPLY,
+      ...pollReplyPacketPayload,
+    });
   });
 
   test('PollReply static create method', () => {

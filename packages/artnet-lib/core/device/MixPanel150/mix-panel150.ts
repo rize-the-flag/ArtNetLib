@@ -32,7 +32,10 @@ export class MixPanel150 extends Device {
 
   public setBrightness({ percent }: { percent: number }): void {
     this.logger.info('USEFULL INFO DELETE PLEASE 2');
-    const percentInRange = Math.max(Constants.BRIGHTNESS_PERCENT_MIN, Math.min(Constants.BRIGHTNESS_PERCENT_MAX, percent));
+    const percentInRange = Math.max(
+      Constants.BRIGHTNESS_PERCENT_MIN,
+      Math.min(Constants.BRIGHTNESS_PERCENT_MAX, percent)
+    );
     const value = Math.ceil(Constants.BRIGHTNESS_STEP * percentInRange);
     this.logger.info(`setBrightness(${String(percent)}) => ${String(value)}`);
     this.setChannel(Constants.BRIGHTNESS_CHANNEL, parseInt(value.toFixed()));
@@ -49,7 +52,10 @@ export class MixPanel150 extends Device {
     const biasInRange = Math.max(Constants.GREEN_MAGENTA_MIN, Math.min(Constants.GREEN_MAGENTA_MAX, bias));
     const value = Math.ceil((Constants.GREEN_MAGENTA_MAX + biasInRange) * Constants.GREEN_MAGENTA_STEP);
     this.logger.info(`setGreenMagentaBias(${String(bias)}) => ${String(value)}`);
-    this.setChannel(Constants.MODE_CHANNEL, Constants.MODE_CCT).setChannel(Constants.FUNCTION_DATA_SUB_CHANNEL_1, value);
+    this.setChannel(Constants.MODE_CHANNEL, Constants.MODE_CCT).setChannel(
+      Constants.FUNCTION_DATA_SUB_CHANNEL_1,
+      value
+    );
   }
 
   public setHUE({ degrees }: { degrees: number }): void {
@@ -60,7 +66,9 @@ export class MixPanel150 extends Device {
   }
 
   public setLightDiffuser({ mode }: { mode: LightDiffuserMode }): void {
-    this.logger.info(`setHUE(${mode}) => ${mode === 'HARD' ? String(Constants.HARD_LIGHT) : String(Constants.SOFT_LIGHT)}`);
+    this.logger.info(
+      `setHUE(${mode}) => ${mode === 'HARD' ? String(Constants.HARD_LIGHT) : String(Constants.SOFT_LIGHT)}`
+    );
     this.setChannel(Constants.MODE_CHANNEL, Constants.MODE_CCT).setChannel(
       Constants.FUNCTION_DATA_SUB_CHANNEL_2,
       mode === 'HARD' ? Constants.HARD_LIGHT : Constants.SOFT_LIGHT
@@ -71,7 +79,10 @@ export class MixPanel150 extends Device {
     percent = Math.min(Constants.SATURATION_MAX, Math.max(Constants.SATURATION_MIN, percent));
     const value = Math.ceil((percent * Constants.SATURATION_DMX_MAX) / Constants.SATURATION_MAX);
     this.logger.info(`setHUE(${String(percent)}) => ${String(value)}`);
-    this.setChannel(Constants.MODE_CHANNEL, Constants.MODE_HSI).setChannel(Constants.FUNCTION_DATA_SUB_CHANNEL_1, value);
+    this.setChannel(Constants.MODE_CHANNEL, Constants.MODE_HSI).setChannel(
+      Constants.FUNCTION_DATA_SUB_CHANNEL_1,
+      value
+    );
   }
 
   public setLightMode({ mode }: { mode: LightMode }): void {
@@ -92,7 +103,17 @@ export class MixPanel150 extends Device {
     this.setChannel(Constants.LIGHTNING_MODE_CHANNEL, value);
   }
 
-  public runCCTLoop({ from, to, speed, direction }: { from: number; to: number; speed: number; direction: LoopDirection }): void {
+  public runCCTLoop({
+    from,
+    to,
+    speed,
+    direction,
+  }: {
+    from: number;
+    to: number;
+    speed: number;
+    direction: LoopDirection;
+  }): void {
     from = Math.min(Constants.CCT_MAX, Math.max(Constants.CCT_MIN, from));
     to = Math.min(Constants.CCT_MAX, Math.max(Constants.CCT_MIN, to));
     const valueFromCCT = (from - Constants.CCT_MIN) / Constants.CCT_STEP;
@@ -106,7 +127,10 @@ export class MixPanel150 extends Device {
       .setChannel(Constants.FUNCTION_DATA_SUB_CHANNEL_1, valueFromCCT)
       .setChannel(Constants.FUNCTION_DATA_SUB_CHANNEL_2, valueToCCT)
       .setChannel(Constants.FUNCTION_DATA_SUB_CHANNEL_3, speed)
-      .setChannel(Constants.FUNCTION_DATA_SUB_CHANNEL_4, direction === 'ONE_WAY' ? Constants.LOOP_ONEWAY : Constants.LOOP_BACK_AND_FORCE);
+      .setChannel(
+        Constants.FUNCTION_DATA_SUB_CHANNEL_4,
+        direction === 'ONE_WAY' ? Constants.LOOP_ONEWAY : Constants.LOOP_BACK_AND_FORCE
+      );
   }
 
   public setAction(action: unknown): ThrowsException<void> {

@@ -25,12 +25,17 @@ export class NodeManager extends TypedEmitter<NodeManagerEvents> {
     this.watchNodes();
   }
 
-  private watchNodes(watchInterval: number = DEFAULT_NODE_WATCHER_INTERVAL_MS, nodeDeathTimout: number = NODE_DEATH_TIMEOUT_MS): void {
+  private watchNodes(
+    watchInterval: number = DEFAULT_NODE_WATCHER_INTERVAL_MS,
+    nodeDeathTimout: number = NODE_DEATH_TIMEOUT_MS
+  ): void {
     this.nodeDeathTimeout = nodeDeathTimout;
     this.nodeWatcherId = setInterval(() => {
       const now = new Date().getTime();
 
-      const deadNodes = this.get((node) => node.lastResponseTime.getTime() + this.nodeDeathTimeout <= now && node.isAlive);
+      const deadNodes = this.get(
+        (node) => node.lastResponseTime.getTime() + this.nodeDeathTimeout <= now && node.isAlive
+      );
 
       deadNodes.forEach((node) => (node.isAlive = false));
 

@@ -89,7 +89,6 @@ void (async () => {
   // Use this api only for detached universes. Since for controlled universes this doesn't make sense
   const sentBytes = await artnet.sendBroadcast(verse);
 
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`${sentBytes} bytes was sent`);
 
   //Send all attached universes of all nodes and all ports

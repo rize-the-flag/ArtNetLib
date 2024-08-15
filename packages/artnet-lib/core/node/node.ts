@@ -73,7 +73,10 @@ export class Node {
 
   private assertPortsCount(portNumber: number) {
     if (portNumber >= this.getNodeInfo().numPorts) {
-      throw new ArtNetLibError('NODE_PORTS_LIMIT', `Node ${this.name} supports ${String(this.getNodeInfo().numPorts)} port(s) only`);
+      throw new ArtNetLibError(
+        'NODE_PORTS_LIMIT',
+        `Node ${this.name} supports ${String(this.getNodeInfo().numPorts)} port(s) only`
+      );
     }
   }
 
@@ -104,7 +107,9 @@ export class Node {
   public async syncAll(): Promise<number[]> {
     this.updateUniverseAddressInfo(Array.from(this.ports.keys()));
     return Promise.all(
-      Array.from(this.ports.values()).map((universe) => this.networkCommunicator.send(universe.buildDmxData(), this.ipAddress))
+      Array.from(this.ports.values()).map((universe) =>
+        this.networkCommunicator.send(universe.buildDmxData(), this.ipAddress)
+      )
     );
   }
 

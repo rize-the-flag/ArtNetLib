@@ -13,7 +13,7 @@ export class DiagData extends ArtNetPacket<DiagDataPayload> {
     ['logicalPort', { length: 1, type: 'number' }],
     ['filler3', { length: 1, type: 'number' }],
     ['length', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['data', { length: 512, type: 'string' }],
+    ['data', { length: 512, type: 'string', encoding: 'utf8' }],
   ]);
 
   constructor(payload: Partial<DiagDataPayload> = {}) {
@@ -30,7 +30,7 @@ export class DiagData extends ArtNetPacket<DiagDataPayload> {
       ...payload,
     };
 
-    DiagData.schemaDefault.setValue('data', { length, type: 'string' });
+    DiagData.schemaDefault.setValue('data', { length, type: 'string', encoding: 'utf8' });
     super(OP_CODE.DIAG_DATA, diagDataPacket, DiagData.schemaDefault);
   }
 
@@ -56,7 +56,7 @@ export class DiagData extends ArtNetPacket<DiagDataPayload> {
     if (!diagDataLength) return null;
 
     const schemaWithHeader = new Schema([...DiagData.headerSchema, ...DiagData.schemaDefault]);
-    schemaWithHeader.setValue('data', { length: diagDataLength, type: 'string' });
+    schemaWithHeader.setValue('data', { length: diagDataLength, type: 'string', encoding: 'utf8' });
 
     return new DiagData(decode(data, schemaWithHeader));
   }

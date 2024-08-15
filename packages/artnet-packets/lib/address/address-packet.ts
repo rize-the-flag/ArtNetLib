@@ -1,7 +1,6 @@
 import { ArtNetPacket } from '../common/art-net-packet';
 import { OP_CODE, PROTOCOL_VERSION } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
-import { DmxPacketPayload } from '../dmx/dmx.interface';
 import { AddressPacketPayload } from './address.interface';
 
 export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
@@ -10,8 +9,8 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
     ['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
     ['netSwitch', { length: 1, type: 'number' }],
     ['bindIndex', { length: 1, type: 'number' }],
-    ['shortName', { length: 18, type: 'string' }],
-    ['longName', { length: 64, type: 'string' }],
+    ['shortName', { length: 18, type: 'string', encoding: 'utf8' }],
+    ['longName', { length: 64, type: 'string', encoding: 'utf8' }],
     ['swIn', { length: 4, type: 'array', size: 1 }],
     ['swOut', { length: 4, type: 'array', size: 1 }],
     ['netSubSwitch', { length: 1, type: 'number' }],

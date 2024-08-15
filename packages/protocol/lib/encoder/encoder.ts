@@ -1,10 +1,12 @@
-import { PacketPayload, PacketSchemaString, PacketSchemaNumber, PacketSchemaArray, PacketSchemaRecord2 } from '../types';
+import {
+  PacketPayload,
+  PacketSchemaString,
+  PacketSchemaNumber,
+  PacketSchemaArray,
+  PacketSchemaRecord,
+  PacketSchemaArrayWithByteOrder,
+} from '../types';
 import { Schema } from '../schema/schema';
-import { off } from 'process';
-
-function assertUnreachable(x: never): never {
-  throw new Error('Exhaustive check failed');
-}
 
 function writeNumberToBuffer(buffer: Buffer, schemaRecord: PacketSchemaNumber, numberValue: number, offset: number): void {
   switch (schemaRecord.length) {
@@ -21,15 +23,13 @@ function writeNumberToBuffer(buffer: Buffer, schemaRecord: PacketSchemaNumber, n
 }
 
 function writeStringToBuffer(buffer: Buffer, schemaRecord: PacketSchemaString, stringValue: string, offset: number): number {
-  return buffer.write(stringValue, offset, schemaRecord.length, 'utf8');
+  return buffer.write(stringValue, offset, schemaRecord.length, schemaRecord.encoding);
 }
 
 function writeU16ArrayToBuffer(buffer: Buffer, arrayValues: number[], offset: number, byteOrder: 'LE' | 'BE'): void {
   const u16Array = new Uint16Array(arrayValues);
   const toBuffer = Buffer.from(u16Array.buffer);
-  if (byteOrder === 'BE') {
-    toBuffer.swap16();
-  }
+  byteOrder === 'BE' && toBuffer.swap16();
   buffer.set(toBuffer, offset);
 }
 
@@ -58,18 +58,22 @@ function writeArrayToBuffer(buffer: Buffer, schemaRecord: PacketSchemaArray, arr
   return offset + schemaRecord.length * schemaRecord.size;
 }
 
-function readNumberFromBuffer(buffer: Buffer, schemeRecord: PacketSchemaNumber, offset: number): number | bigint {
+function readNumberFromBuffer(buffer: Buffer, schemaRecord: PacketSchemaNumber, offset: number): number | bigint {
   let result;
-  if (schemeRecord.length === 2) {
-    schemeRecord.byteOrder === 'LE' ? (result = buffer.readUint16LE(offset)) : (result = buffer.readUInt16BE(offset));
-  } else if (schemeRecord.length === 4) {
-    schemeRecord.byteOrder === 'LE' ? (result = buffer.readUint32LE(offset)) : (result = buffer.readUInt32BE(offset));
-  } else if (schemeRecord.length === 8) {
-    schemeRecord.byteOrder === 'LE' ? (result = buffer.readBigUInt64LE(offset)) : (result = buffer.readBigUInt64BE(offset));
-  } else {
-    result = buffer.readUint8(offset);
+  switch (schemaRecord.length) {
+    case 1:
+      result = buffer.readUint8(offset);
+      break;
+    case 2:
+      schemaRecord.byteOrder === 'LE' ? (result = buffer.readUint16LE(offset)) : (result = buffer.readUInt16BE(offset));
+      break;
+    case 4:
+      schemaRecord.byteOrder === 'LE' ? (result = buffer.readUint32LE(offset)) : (result = buffer.readUInt32BE(offset));
+      break;
+    case 8:
+      schemaRecord.byteOrder === 'LE' ? (result = buffer.readBigUInt64LE(offset)) : (result = buffer.readBigUInt64BE(offset));
+      break;
   }
-
   return result;
 }
 
@@ -79,23 +83,31 @@ function readStringFromBuffer(buffer: Buffer, schemeRecord: PacketSchemaString, 
   return nullTerminatedString.substring(0, lastIndex !== -1 ? lastIndex : nullTerminatedString.length);
 }
 
-function readArrayFromBuffer(buffer: Buffer, schemeRecord: PacketSchemaArray, offset: number): number[] {
-  const rawArray = buffer.subarray(offset, offset + schemeRecord.length * schemeRecord.size);
-  switch (schemeRecord.size) {
+function readU16ArrayFromBuffer(data: Buffer, schemaRecord: PacketSchemaArrayWithByteOrder) {
+  return schemaRecord.byteOrder === 'BE'
+    ? Array.from(new Uint16Array(data.swap16().buffer, data.byteOffset, schemaRecord.length))
+    : Array.from(new Uint16Array(data.buffer, data.byteOffset, schemaRecord.length));
+}
+
+function readU32ArrayFromBuffer(data: Buffer, schemaRecord: PacketSchemaArrayWithByteOrder) {
+  return schemaRecord.byteOrder === 'BE'
+    ? Array.from(new Uint32Array(data.swap32().buffer, data.byteOffset, schemaRecord.length))
+    : Array.from(new Uint32Array(data.buffer, data.byteOffset, schemaRecord.length));
+}
+
+function readArrayFromBuffer(data: Buffer, schemaRecord: PacketSchemaArray, offset: number): number[] {
+  const rawArray = data.subarray(offset, offset + schemaRecord.length * schemaRecord.size);
+  switch (schemaRecord.size) {
     case 1:
       return Array.from(rawArray);
     case 2:
-      return schemeRecord.byteOrder === 'BE'
-        ? Array.from(new Uint16Array(rawArray.swap16().buffer, rawArray.byteOffset, schemeRecord.length))
-        : Array.from(new Uint16Array(rawArray.buffer, rawArray.byteOffset, schemeRecord.length));
+      return readU16ArrayFromBuffer(rawArray, schemaRecord);
     case 4:
-      return schemeRecord.byteOrder === 'BE'
-        ? Array.from(new Uint32Array(rawArray.swap32().buffer, rawArray.byteOffset, schemeRecord.length))
-        : Array.from(new Uint32Array(rawArray.buffer, rawArray.byteOffset, schemeRecord.length));
+      return readU32ArrayFromBuffer(rawArray, schemaRecord);
   }
 }
 
-export function getOffsetOf(currentOffset: number, record: PacketSchemaRecord2) {
+export function getOffsetOf(currentOffset: number, record: PacketSchemaRecord) {
   if (record.type !== 'array') return currentOffset + record.length;
   return currentOffset + record.length * record.size;
 }

@@ -20,8 +20,8 @@ describe('DMX packet test', () => {
     };
 
     const dataValid = Buffer.from([
-      65, 114, 116, 45, 78, 101, 116, 0, 0, 80, 0, 14, 2, 3, 1, 6, 0, 16, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-      255, 255, 255,
+      65, 114, 116, 45, 78, 101, 116, 0, 0, 80, 0, 14, 2, 3, 1, 6, 0, 16, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+      255, 255, 255, 255, 255, 255, 255,
     ]);
     const dataFromPayload = new Dmx(dmxPacketPayload);
     expect(dataFromPayload.encode()).toEqual(dataValid);

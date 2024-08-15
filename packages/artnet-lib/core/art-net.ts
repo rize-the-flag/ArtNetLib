@@ -172,7 +172,11 @@ export class ArtNetImpl {
    * @param {DeviceConstructorArgs} device
    * @return {{deviceInstance: Generic | MixPanel150, Universe: Universe} | null}
    */
-  public setDevice(universeName: string, deviceIndex: number, device: DeviceConstructorArgs): ThrowsException<undefined | null> {
+  public setDevice(
+    universeName: string,
+    deviceIndex: number,
+    device: DeviceConstructorArgs
+  ): ThrowsException<undefined | null> {
     const universe = this.getUniverseByName(universeName);
     const deviceInstance = this.createDevices([device]).pop();
     if (!universe || !deviceInstance) return null;
@@ -259,7 +263,11 @@ export class ArtNetImpl {
    * @param {ArtNetDeviceAction} action
    * @return {Universe | null}
    */
-  public setDeviceAction(universeName: string, deviceIndex: number, action: ArtNetDeviceAction): ThrowsException<Universe | null> {
+  public setDeviceAction(
+    universeName: string,
+    deviceIndex: number,
+    action: ArtNetDeviceAction
+  ): ThrowsException<Universe | null> {
     const universe = this.getUniverseByName(universeName);
     if (!universe) return null;
     universe.getDevice(deviceIndex)?.setAction(action);

@@ -17,5 +17,6 @@
     "type": "git",
     "url": "git@github.com:rize-the-flag/ArtNetLib.git"
   },
-  "dependencies": {}
+  "devDependencies": {
+  }
 }

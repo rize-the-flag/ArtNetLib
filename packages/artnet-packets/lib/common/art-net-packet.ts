@@ -15,7 +15,10 @@ export abstract class ArtNetPacket<TPayload extends PacketPayload> extends Packe
       ...packetPayload,
     };
 
-    const schemaWithHeader: Schema<TPayload & HeaderPayload> = new Schema([...ArtNetPacket.headerSchema, ...packetSchema]);
+    const schemaWithHeader: Schema<TPayload & HeaderPayload> = new Schema([
+      ...ArtNetPacket.headerSchema,
+      ...packetSchema,
+    ]);
 
     super(payloadWithHeader, schemaWithHeader);
   }

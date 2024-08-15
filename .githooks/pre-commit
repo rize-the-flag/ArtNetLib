@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-commit".
+
+
+set -e -x
+
+npm run lint
+
+ESLINT_RESULT="$?"
+
+if [[ "${ESLINT_RESULT}" != 0 ]]; then
+    printf "\n\031[40mLINT FAILED:\033[0m\n fix linting error first and try again"
+    exit 1
+fi
+
+CURRENT_BRANCH=$(git branch --show-current)
+WORKSPACES=$(git diff $CURRENT_BRANCH --name-only -- ../packages | awk -F "/" '{printf "%s\n", $2}' | sort | uniq)
+
+for ws in $WORKSPACES; do
+    npm version patch --workspace=../packages/$ws
+done
+

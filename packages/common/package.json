@@ -14,9 +14,7 @@
   ],
   "author": "Rize-The-Flag",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
-    "@types/node": "^18.14.0"
   },
   "files": [
     "build"

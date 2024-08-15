@@ -3,8 +3,6 @@
 # Installation
 `nmp i @rtf-dm/artnet-packets`
 
-#ArtNet Packets
-
 ## ArtNet-Packets it's a package that contains Classes that implements low level ArtNet protocol packets
 
 ## How to use:
@@ -14,7 +12,6 @@ import {Poll, PollReply} from "@rtf-dm/artnet-packets";
 import {Dmx} from "@rtf-dm/artnet-packets";
 import {PROTOCOL_VERSION, DIAG_PRIORITY, ARTNET_PORT} from "@rtf-dm/artnet-packets";
 import {Socket} from "dgram";
-import {date} from "zod";
 
 socket = dgram.createSocket({type: 'udp4', reuseAddr: true});
 

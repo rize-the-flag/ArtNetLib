@@ -7,7 +7,6 @@ import {
   PacketSchemaArrayWithByteOrder,
 } from '../types';
 import { Schema } from '../schema/schema';
-import { off } from 'process';
 
 function writeNumberToBuffer(buffer: Buffer, schemaRecord: PacketSchemaNumber, numberValue: number, offset: number): void {
   switch (schemaRecord.length) {

@@ -1,7 +1,6 @@
 import { ArtNetPacket } from '../common/art-net-packet';
 import { OP_CODE, PROTOCOL_VERSION } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
-import { DmxPacketPayload } from '../dmx/dmx.interface';
 import { AddressPacketPayload } from './address.interface';
 
 export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {

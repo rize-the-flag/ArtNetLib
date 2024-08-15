@@ -4,7 +4,6 @@ import { ThrowsException } from '../types';
 import { decode, Schema } from '@rtf-dm/protocol';
 import { clamp } from '../common/helpers';
 import { DmxPacketPayload } from './dmx.interface';
-import { HeaderPayload } from '../common/packet.interface';
 
 export class Dmx extends ArtNetPacket<DmxPacketPayload> {
   static readonly DMX_CHANNEL_MAX = 512;
@@ -48,8 +47,7 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
 
     const dmxDataLengthOffset = Dmx.schemaDefault.getOffsetOf('length');
 
-    if (dmxDataLengthOffset === Dmx.schemaDefault.calcBytesInPacket()) return null;
-    if (dmxDataLengthOffset === null) return null;
+    if (!dmxDataLengthOffset || dmxDataLengthOffset === Dmx.schemaDefault.calcBytesInPacket()) return null;
 
     return data.readUInt16BE(dmxDataLengthOffset + Dmx.getHeaderLength());
   }

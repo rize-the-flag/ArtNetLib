@@ -8,23 +8,21 @@
 # To enable this hook, rename this file to "pre-commit".
 
 
-#set -e -x
-#CURRENT_BRANCH=$(git branch --show-current)
-#WORKSPACES=$(git diff --cached origin/$CURRENT_BRANCH --name-only ./packages | awk -F "/" '{printf "%s\n", $2}' | sort | uniq)
-#
-#for ws in $WORKSPACES; do
-#    npm version patch --workspace ./packages/$ws
-#    git add ./packages/$ws/package.json
-#done
+set -e -x
 
 npm run lint
-npm run test
 
 ESLINT_RESULT="$?"
 
-if [[ "${ESLINT_RESULT}" == 0 ]]; then
-  printf "\n\033[34;40mUPDATE PACKAGE's VERSION\033[0m\n"
-else
-  printf "\n\031[40mLINT FAILED:\033[0m\n fix linting error first and try again"
-  exit 1
+if [[ "${ESLINT_RESULT}" != 0 ]]; then
+    printf "\n\031[40mLINT FAILED:\033[0m\n fix linting error first and try again"
+    exit 1
 fi
+
+CURRENT_BRANCH=$(git branch --show-current)
+WORKSPACES=$(git diff $CURRENT_BRANCH --name-only -- ../packages | awk -F "/" '{printf "%s\n", $2}' | sort | uniq)
+
+for ws in $WORKSPACES; do
+    npm version patch --workspace=../packages/$ws
+done
+

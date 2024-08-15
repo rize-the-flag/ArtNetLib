@@ -3,7 +3,7 @@
     "build": "npm run build --workspace=packages",
     "lint": "prettier . --write && npx eslint . --fix",
     "test": "jest --config ./configs/jest/jest.config.js",
-    "cleanup": "npm run cleanup --workspace=packages"
+    "cleanup": "npm run cleanup --workspace=packages",
   },
   "keywords": [],
   "author": "Rize-The-Flag",

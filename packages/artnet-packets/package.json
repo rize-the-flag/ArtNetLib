@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/artnet-packets",
-  "version": "0.5.12",
+  "version": "0.5.15",
   "description": "ArtNet packets package for protocol version 14",
   "main": "build/index.js",
   "types": "build/types",

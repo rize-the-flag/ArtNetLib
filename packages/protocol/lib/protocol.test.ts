@@ -48,7 +48,7 @@ describe('Protocol package tests', () => {
       numberField4b: 123456,
       numberField2bBE: 0xffdd,
       numberField4bBE: 0xaabbccdd,
-      arrayField1b: [0xfa, 0xfa, 0xfa, 0xfa],
+      arrayField1b: [0xea, 0xea, 0xea, 0xea],
       arrayField2bLe: [0xfffe, 0xfffe, 0xfffe, 0xfffe],
       arrayField2bBe: [0xfffe, 0xfffe, 0xfffe, 0xfffe],
       filler: 129, // align to

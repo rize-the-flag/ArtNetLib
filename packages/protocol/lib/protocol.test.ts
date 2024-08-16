@@ -49,12 +49,12 @@ describe('Protocol package tests', () => {
       numberField2bBE: 0xffdd,
       numberField4bBE: 0xaabbccdd,
       arrayField1b: [0xea, 0xea, 0xea, 0xea],
-      arrayField2bLe: [0xfffe, 0xfffe, 0xfffe, 0xfffe],
-      arrayField2bBe: [0xfffe, 0xfffe, 0xfffe, 0xfffe],
+      arrayField2bLe: [0xfafe, 0xfafe, 0xfafe, 0xfafe],
+      arrayField2bBe: [0xafef, 0xafef, 0xafef, 0xafef],
       filler: 129, // align to
       filler2: 138,
       arrayField4bLe: [0xfafbfcfd, 0xfafbfcfd, 0xfafbfcfd, 0xfafbfcfd],
-      arrayField4bBe: [0xfafbfcfd, 0xfafbfcfd, 0xfafbfcfd, 0xfafbfcfd],
+      arrayField4bBe: [0xdabfcfdf, 0xdabfcfdf, 0xdabfcfdf, 0xdabfcfdf],
     };
 
     const packet = new TestPacket(payload);

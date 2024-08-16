@@ -34,7 +34,10 @@ export interface ArtNet {
 
   changeNetwork(config: NetworkConfig): string;
 
-  createDevice<TDevice extends keyof SupportedDevices>(deviceType: TDevice, dmxDataSize?: number): InstanceType<SupportedDevices[TDevice]>;
+  createDevice<TDevice extends keyof SupportedDevices>(
+    deviceType: TDevice,
+    dmxDataSize?: number
+  ): InstanceType<SupportedDevices[TDevice]>;
 
   getBoundNetworkInfo(): NetworkConfig;
 

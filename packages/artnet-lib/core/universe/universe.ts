@@ -69,7 +69,10 @@ export class Universe {
 
   @Log
   public buildDmxData(): Buffer {
-    const data = Array.from(this.devices.entries()).reduce<number[]>((acc, [_, device]) => acc.concat(device.getDmxData()), []);
+    const data = Array.from(this.devices.entries()).reduce<number[]>(
+      (acc, [_, device]) => acc.concat(device.getDmxData()),
+      []
+    );
     this.controlPacket.setChannels(data);
     return this.controlPacket.encode();
   }
@@ -83,8 +86,12 @@ export class Universe {
     }));
   }
 
-  public getDevice<TDeviceKey extends keyof SupportedDevices>(index: number): InstanceType<SupportedDevices[TDeviceKey]> | null;
-  public getDevice<TDeviceKey extends keyof SupportedDevices>(name: TDeviceKey): InstanceType<SupportedDevices[TDeviceKey]>[];
+  public getDevice<TDeviceKey extends keyof SupportedDevices>(
+    index: number
+  ): InstanceType<SupportedDevices[TDeviceKey]> | null;
+  public getDevice<TDeviceKey extends keyof SupportedDevices>(
+    name: TDeviceKey
+  ): InstanceType<SupportedDevices[TDeviceKey]>[];
   public getDevice<TDeviceKey extends keyof SupportedDevices>(
     indexOrName: number | TDeviceKey
   ): InstanceType<valueOf<SupportedDevices>> | InstanceType<valueOf<SupportedDevices>>[] | null {

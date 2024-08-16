@@ -63,7 +63,9 @@ export class TypedEmitter<TEvents extends EventHandlers> implements Emitter<TEve
     });
   }
 
-  public waitForAll<TEventName extends keyof TEvents>(events: TEventName[]): Promise<Parameters<TEvents[TEventName]>>[] {
+  public waitForAll<TEventName extends keyof TEvents>(
+    events: TEventName[]
+  ): Promise<Parameters<TEvents[TEventName]>>[] {
     return events.map((event) => this.waitFor<TEventName>(event));
   }
 

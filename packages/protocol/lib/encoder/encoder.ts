@@ -8,21 +8,35 @@ import {
 } from '../types';
 import { Schema } from '../schema/schema';
 
-function writeNumberToBuffer(buffer: Buffer, schemaRecord: PacketSchemaNumber, numberValue: number, offset: number): void {
+function writeNumberToBuffer(
+  buffer: Buffer,
+  schemaRecord: PacketSchemaNumber,
+  numberValue: number,
+  offset: number
+): void {
   switch (schemaRecord.length) {
     case 1:
       buffer.writeUInt8(numberValue, offset);
       break;
     case 2:
-      schemaRecord.byteOrder === 'LE' ? buffer.writeUInt16LE(numberValue, offset) : buffer.writeUInt16BE(numberValue, offset);
+      schemaRecord.byteOrder === 'LE'
+        ? buffer.writeUInt16LE(numberValue, offset)
+        : buffer.writeUInt16BE(numberValue, offset);
       break;
     case 4:
-      schemaRecord.byteOrder === 'LE' ? buffer.writeUInt32LE(numberValue, offset) : buffer.writeUInt32BE(numberValue, offset);
+      schemaRecord.byteOrder === 'LE'
+        ? buffer.writeUInt32LE(numberValue, offset)
+        : buffer.writeUInt32BE(numberValue, offset);
       break;
   }
 }
 
-function writeStringToBuffer(buffer: Buffer, schemaRecord: PacketSchemaString, stringValue: string, offset: number): number {
+function writeStringToBuffer(
+  buffer: Buffer,
+  schemaRecord: PacketSchemaString,
+  stringValue: string,
+  offset: number
+): number {
   return buffer.write(stringValue, offset, schemaRecord.length, schemaRecord.encoding);
 }
 
@@ -42,7 +56,12 @@ function writeU32ArrayToBuffer(buffer: Buffer, arrayValues: number[], offset: nu
   buffer.set(toBuffer, offset);
 }
 
-function writeArrayToBuffer(buffer: Buffer, schemaRecord: PacketSchemaArray, arrayValues: number[], offset: number): number {
+function writeArrayToBuffer(
+  buffer: Buffer,
+  schemaRecord: PacketSchemaArray,
+  arrayValues: number[],
+  offset: number
+): number {
   switch (schemaRecord.size) {
     case 1:
       buffer.set(arrayValues, offset);
@@ -71,7 +90,9 @@ function readNumberFromBuffer(buffer: Buffer, schemaRecord: PacketSchemaNumber, 
       schemaRecord.byteOrder === 'LE' ? (result = buffer.readUint32LE(offset)) : (result = buffer.readUInt32BE(offset));
       break;
     case 8:
-      schemaRecord.byteOrder === 'LE' ? (result = buffer.readBigUInt64LE(offset)) : (result = buffer.readBigUInt64BE(offset));
+      schemaRecord.byteOrder === 'LE'
+        ? (result = buffer.readBigUInt64LE(offset))
+        : (result = buffer.readBigUInt64BE(offset));
       break;
   }
   return result;

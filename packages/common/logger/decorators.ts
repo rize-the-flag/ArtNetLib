@@ -3,7 +3,10 @@ interface LoggerDecoratorOptions<TLogger> {
   measurePerformance: boolean;
 }
 
-export function LogMethod<TLogger>(logger: TLogger, { severity, measurePerformance }: LoggerDecoratorOptions<typeof logger>) {
+export function LogMethod<TLogger>(
+  logger: TLogger,
+  { severity, measurePerformance }: LoggerDecoratorOptions<typeof logger>
+) {
   return function <This, Args extends unknown[], Return>(
     value: (this: This, ...args: Args) => Return,
     context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>

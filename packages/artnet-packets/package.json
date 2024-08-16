@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/artnet-packets",
-  "version": "0.5.15",
+  "version": "0.5.18",
   "description": "ArtNet packets package for protocol version 14",
   "main": "build/index.js",
   "types": "build/types",
@@ -26,6 +26,5 @@
     "type": "git",
     "url": "git@github.com:rize-the-flag/ArtNetLib.git"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/common",
-  "version": "0.1.5",
+  "version": "0.1.8",
   "description": "Decorators library",
   "main": "build/index.js",
   "types": "build/types",
@@ -14,8 +14,7 @@
   ],
   "author": "Rize-The-Flag",
   "license": "MIT",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "files": [
     "build"
   ],

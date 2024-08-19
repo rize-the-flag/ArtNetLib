@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/protocol",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "package for creating packet level protocol description",
   "main": "build/index.js",
   "types": "build/types",

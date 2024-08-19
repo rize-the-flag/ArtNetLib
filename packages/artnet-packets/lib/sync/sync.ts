@@ -6,9 +6,9 @@ import { SyncPacketPayload } from './sync.interface';
 export class Sync extends ArtNetPacket<SyncPacketPayload> {
   //order of schema fields make sense do not change it!!!
   private static schemaDefault = new Schema([
-    ['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['aux1', { length: 1, type: 'number' }],
-    ['aux2', { length: 1, type: 'number' }],
+    ['protoVersion', { size: 2, type: 'number', byteOrder: 'BE' }],
+    ['aux1', { size: 1, type: 'number' }],
+    ['aux2', { size: 1, type: 'number' }],
   ]);
 
   constructor(payload: Partial<SyncPacketPayload> = {}) {

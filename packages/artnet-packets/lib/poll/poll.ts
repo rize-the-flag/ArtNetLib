@@ -8,11 +8,11 @@ import { DIAG_PRIORITY, NODE_BEHAVIOUR_MASK } from './constants';
 
 export class Poll extends ArtNetPacket<PollPacketPayload> {
   private static readonly schemaDefault = new Schema<PollPacketPayload>([
-    ['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['flags', { length: 1, type: 'number' }],
-    ['diagPriority', { length: 1, type: 'number' }],
-    ['targetPortAddressTop', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['targetPortAddressBottom', { length: 2, type: 'number', byteOrder: 'BE' }],
+    ['protoVersion', { size: 2, type: 'number', byteOrder: 'BE' }],
+    ['flags', { size: 1, type: 'number' }],
+    ['diagPriority', { size: 1, type: 'number' }],
+    ['targetPortAddressTop', { size: 2, type: 'number', byteOrder: 'BE' }],
+    ['targetPortAddressBottom', { size: 2, type: 'number', byteOrder: 'BE' }],
   ]);
 
   constructor(payload: Partial<PollPacketPayload> = {}) {

@@ -13,25 +13,26 @@ export type Encoding =
 
 export type PacketSchemaString = {
   type: 'string';
+  size: 1 | 2;
   length: number;
   encoding: Encoding;
 };
 
 export type PacketSchemaNumberWithByteOrder = {
   type: 'number';
-  length: 2 | 4;
+  size: 2 | 4;
   byteOrder: 'LE' | 'BE';
 };
 
 export type PacketSchemaNumberBigInt = {
   type: 'number';
-  length: 8;
+  size: 8;
   byteOrder: 'LE' | 'BE';
 };
 
 export type PacketSchemaNumberWithoutByteOrder = {
   type: 'number';
-  length: 1;
+  size: 1;
 };
 
 export type PacketSchemaNumber =

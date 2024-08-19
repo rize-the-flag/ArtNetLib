@@ -7,13 +7,13 @@ export class DiagData extends ArtNetPacket<DiagDataPayload> {
   static readonly DIAG_CHANNEL_MAX = 512;
   //order of schema fields make sense do not change it!!!
   private static schemaDefault = new Schema<DiagDataPayload>([
-    ['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['filler1', { length: 1, type: 'number' }],
-    ['diagPriority', { length: 1, type: 'number' }],
-    ['logicalPort', { length: 1, type: 'number' }],
-    ['filler3', { length: 1, type: 'number' }],
-    ['length', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['data', { length: 512, type: 'string', encoding: 'utf8' }],
+    ['protoVersion', { size: 2, type: 'number', byteOrder: 'BE' }],
+    ['filler1', { size: 1, type: 'number' }],
+    ['diagPriority', { size: 1, type: 'number' }],
+    ['logicalPort', { size: 1, type: 'number' }],
+    ['filler3', { size: 1, type: 'number' }],
+    ['length', { size: 2, type: 'number', byteOrder: 'BE' }],
+    ['data', { length: 512, size: 1, type: 'string', encoding: 'utf8' }],
   ]);
 
   constructor(payload: Partial<DiagDataPayload> = {}) {
@@ -30,7 +30,7 @@ export class DiagData extends ArtNetPacket<DiagDataPayload> {
       ...payload,
     };
 
-    DiagData.schemaDefault.setValue('data', { length, type: 'string', encoding: 'utf8' });
+    DiagData.schemaDefault.setValue('data', { length, size: 1, type: 'string', encoding: 'utf8' });
     super(OP_CODE.DIAG_DATA, diagDataPacket, DiagData.schemaDefault);
   }
 
@@ -56,7 +56,7 @@ export class DiagData extends ArtNetPacket<DiagDataPayload> {
     if (!diagDataLength) return null;
 
     const schemaWithHeader = new Schema([...DiagData.headerSchema, ...DiagData.schemaDefault]);
-    schemaWithHeader.setValue('data', { length: diagDataLength, type: 'string', encoding: 'utf8' });
+    schemaWithHeader.setValue('data', { length: diagDataLength, size: 1, type: 'string', encoding: 'utf8' });
 
     return new DiagData(decode(data, schemaWithHeader));
   }

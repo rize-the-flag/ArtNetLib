@@ -4,8 +4,8 @@ import { Packet, PacketPayload, Schema } from '@rtf-dm/protocol';
 
 export abstract class ArtNetPacket<TPayload extends PacketPayload> extends Packet<TPayload & HeaderPayload> {
   protected static headerSchema = new Schema([
-    ['ID', { length: 8, type: 'string', encoding: 'utf8' }],
-    ['opCode', { length: 2, type: 'number', byteOrder: 'LE' }],
+    ['ID', { length: 8, size: 1, type: 'string', encoding: 'utf8' }],
+    ['opCode', { size: 2, type: 'number', byteOrder: 'LE' }],
   ]);
 
   protected constructor(opCode: OpCode, packetPayload: TPayload, packetSchema: Schema<TPayload>) {
@@ -28,10 +28,13 @@ export abstract class ArtNetPacket<TPayload extends PacketPayload> extends Packe
   }
 
   static getHeaderLength(): number {
-    const ID = ArtNetPacket.headerSchema.getValue('ID')?.length;
-    const opCode = ArtNetPacket.headerSchema.getValue('opCode')?.length;
+    const ID = ArtNetPacket.headerSchema.getValue('ID');
+    const opCode = ArtNetPacket.headerSchema.getValue('opCode')?.size;
+
     if (!ID || !opCode) throw new Error("ID or opCode wasn't found in header");
-    return ID + opCode;
+    if (ID.type !== 'string') throw new Error('ID should be string');
+
+    return ID.length + opCode;
   }
 
   static readPacketID(buffer: Buffer): string {

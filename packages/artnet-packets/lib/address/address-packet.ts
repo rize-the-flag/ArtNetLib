@@ -6,16 +6,16 @@ import { AddressPacketPayload } from './address.interface';
 export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
   //order of schema fields makes sense do not change it!!!
   private static schemaDefault = new Schema<AddressPacketPayload>([
-    ['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['netSwitch', { length: 1, type: 'number' }],
-    ['bindIndex', { length: 1, type: 'number' }],
-    ['shortName', { length: 18, type: 'string', encoding: 'utf8' }],
-    ['longName', { length: 64, type: 'string', encoding: 'utf8' }],
+    ['protoVersion', { size: 2, type: 'number', byteOrder: 'BE' }],
+    ['netSwitch', { size: 1, type: 'number' }],
+    ['bindIndex', { size: 1, type: 'number' }],
+    ['shortName', { length: 18, size: 1, type: 'string', encoding: 'utf8' }],
+    ['longName', { length: 64, size: 1, type: 'string', encoding: 'utf8' }],
     ['swIn', { length: 4, type: 'array', size: 1 }],
     ['swOut', { length: 4, type: 'array', size: 1 }],
-    ['netSubSwitch', { length: 1, type: 'number' }],
-    ['swVideo', { length: 1, type: 'number' }],
-    ['command', { length: 1, type: 'number' }],
+    ['netSubSwitch', { size: 1, type: 'number' }],
+    ['swVideo', { size: 1, type: 'number' }],
+    ['command', { size: 1, type: 'number' }],
   ]);
 
   constructor(payload: Partial<AddressPacketPayload> = {}) {

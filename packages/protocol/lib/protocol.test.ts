@@ -23,17 +23,17 @@ describe('Protocol package tests', () => {
     class TestPacket extends Packet<TestPacketPayload> {
       constructor(payload: TestPacketPayload) {
         const schema = new Schema<TestPacketPayload>([
-          ['ID', { length: 5, type: 'string', encoding: 'utf8' }],
-          ['numberField1b', { length: 1, type: 'number' }],
-          ['numberField2b', { length: 2, type: 'number', byteOrder: 'LE' }],
-          ['numberField4b', { length: 4, type: 'number', byteOrder: 'LE' }],
-          ['numberField2bBE', { length: 2, type: 'number', byteOrder: 'BE' }],
-          ['numberField4bBE', { length: 4, type: 'number', byteOrder: 'BE' }],
+          ['ID', { size: 1, length: 5, type: 'string', encoding: 'ascii' }],
+          ['numberField1b', { size: 1, type: 'number' }],
+          ['numberField2b', { size: 2, type: 'number', byteOrder: 'LE' }],
+          ['numberField4b', { size: 4, type: 'number', byteOrder: 'LE' }],
+          ['numberField2bBE', { size: 2, type: 'number', byteOrder: 'BE' }],
+          ['numberField4bBE', { size: 4, type: 'number', byteOrder: 'BE' }],
           ['arrayField1b', { length: 4, type: 'array', size: 1 }],
           ['arrayField2bLe', { length: 4, type: 'array', size: 2, byteOrder: 'LE' }],
           ['arrayField2bBe', { length: 4, type: 'array', size: 2, byteOrder: 'BE' }],
-          ['filler', { length: 1, type: 'number' }],
-          ['filler2', { length: 1, type: 'number' }],
+          ['filler', { size: 1, type: 'number' }],
+          ['filler2', { size: 1, type: 'number' }],
           ['arrayField4bBe', { length: 4, type: 'array', size: 4, byteOrder: 'BE' }],
           ['arrayField4bLe', { length: 4, type: 'array', size: 4, byteOrder: 'LE' }],
         ]);

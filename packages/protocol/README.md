@@ -76,6 +76,11 @@ const buf = packet.encode();
 const decoded = packet.decode(buf);
 ```
 
+#### VER 0.6.1
+
+- Rename schema "length" field for non array type to "size" for consistency
+- Types improvements
+
 #### VER 0.5.12
 
 - Fixed types.

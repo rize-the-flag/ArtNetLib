@@ -3,7 +3,7 @@ import { OP_CODE, PROTOCOL_VERSION } from '../constants';
 import { decode, Schema } from '@rtf-dm/protocol';
 import { AddressPacketPayload } from './address.interface';
 
-export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
+export class Address extends ArtNetPacket<AddressPacketPayload> {
   //order of schema fields makes sense do not change it!!!
   private static schemaDefault = new Schema<AddressPacketPayload>([
     ['protoVersion', { size: 2, type: 'number', byteOrder: 'BE' }],
@@ -33,7 +33,7 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
       ...payload,
     };
 
-    super(OP_CODE.ADDRESS, addressPacketPayload, AddressPacket.schemaDefault);
+    super(OP_CODE.ADDRESS, addressPacketPayload, Address.schemaDefault);
   }
 
   public applyPortsConfig(): this {
@@ -56,11 +56,11 @@ export class AddressPacket extends ArtNetPacket<AddressPacketPayload> {
     return super.is(data) && ArtNetPacket.readPacketOpCode(data) === OP_CODE.ADDRESS;
   }
 
-  public static create(data: Buffer): AddressPacket | null {
-    const schemaWithHeader = new Schema([...AddressPacket.headerSchema, ...AddressPacket.schemaDefault]);
+  public static create(data: Buffer): Address | null {
+    const schemaWithHeader = new Schema([...Address.headerSchema, ...Address.schemaDefault]);
 
-    if (AddressPacket.is(data)) {
-      return new AddressPacket(decode(data, schemaWithHeader));
+    if (Address.is(data)) {
+      return new Address(decode(data, schemaWithHeader));
     }
     return null;
   }

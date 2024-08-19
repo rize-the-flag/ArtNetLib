@@ -1,4 +1,4 @@
-export { AddressPacket } from './lib/address/address-packet';
+export { Address } from './lib/address/address';
 export { Sync } from './lib/sync/sync';
 export { DiagData } from './lib/diag-data/diag-data';
 export { PollReply } from './lib/poll-reply/poll-reply';

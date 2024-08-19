@@ -2,12 +2,12 @@ name: Npm Publish
 on:
   push:
     tags:
-      - release_*.*.*
-      - beta_*.*.*
+      - release_'*'.'*'.'*'
+      - beta_'*'.'*'.'*'
   pull_request:
     tags:
-      - release_*.*.*
-      - beta_*.*.*
+      - release_'*'.'*'.'*'
+      - beta_'*'.'*'.'*'
 jobs:
   build:
     runs-on: ubuntu-latest

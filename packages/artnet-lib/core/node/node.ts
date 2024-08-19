@@ -2,7 +2,7 @@ import { ArtNetLibError } from '../lib-error';
 import { Universe } from '../universe/universe';
 import { Communicator } from '../communicator/communicator.interface';
 import { NodeInfo } from './node.interface';
-import { AddressPacket, AddressPacketPayload, PollReplyPacketPayload } from '@rtf-dm/artnet-packets';
+import { Address, AddressPacketPayload, PollReplyPacketPayload } from '@rtf-dm/artnet-packets';
 
 export class Node {
   private networkCommunicator: Communicator;
@@ -133,7 +133,7 @@ export class Node {
       bindIndex: this.pollReplyPayload.bindIndex,
       ...config,
     };
-    const artAddress = new AddressPacket(data).applyPortsConfig();
+    const artAddress = new Address(data).applyPortsConfig();
     return this.networkCommunicator.send(artAddress.encode(), this.ipAddress);
   }
 
@@ -147,7 +147,7 @@ export class Node {
       swIn: this.pollReplyPayload.swOut,
       bindIndex: this.pollReplyPayload.bindIndex,
     };
-    const artAddress = new AddressPacket(data).resetToPhysicalPortsConfig();
+    const artAddress = new Address(data).resetToPhysicalPortsConfig();
     return this.networkCommunicator.send(artAddress.encode(), this.ipAddress);
   }
 }

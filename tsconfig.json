@@ -12,7 +12,13 @@
     "baseUrl": "./"
   },
   "paths": {
-    "@packages/*": ["./packages/*"]
+    "@packages/*": [
+      "./packages/typed-emitter",
+      "./packages/protocol",
+      "./packages/common",
+      "./packages/artnet-packets",
+      "./packages/artnet-lib"
+    ]
   },
   "exclude": ["./build", "./dist", "./eslint.config.mjs"]
 }

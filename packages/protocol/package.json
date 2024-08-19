@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/protocol",
-  "version": "0.5.12",
+  "version": "0.6.2",
   "description": "package for creating packet level protocol description",
   "main": "build/index.js",
   "types": "build/types",
@@ -17,6 +17,5 @@
     "type": "git",
     "url": "git@github.com:rize-the-flag/ArtNetLib.git"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

@@ -11,12 +11,12 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
 
   static readonly schemaDefault = new Schema([
     //The order of schema fields make sense do not change it!!!
-    ['protoVersion', { length: 2, type: 'number', byteOrder: 'BE' }],
-    ['sequence', { length: 1, type: 'number' }],
-    ['physical', { length: 1, type: 'number' }],
-    ['subNet', { length: 1, type: 'number' }],
-    ['net', { length: 1, type: 'number' }],
-    ['length', { length: 2, type: 'number', byteOrder: 'BE' }],
+    ['protoVersion', { size: 2, type: 'number', byteOrder: 'BE' }],
+    ['sequence', { size: 1, type: 'number' }],
+    ['physical', { size: 1, type: 'number' }],
+    ['subNet', { size: 1, type: 'number' }],
+    ['net', { size: 1, type: 'number' }],
+    ['length', { size: 2, type: 'number', byteOrder: 'BE' }],
     ['dmxData', { length: Dmx.DMX_CHANNEL_MAX, type: 'array', size: 1 }],
   ]);
 

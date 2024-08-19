@@ -14,7 +14,7 @@ function writeNumberToBuffer(
   numberValue: number,
   offset: number
 ): void {
-  switch (schemaRecord.length) {
+  switch (schemaRecord.size) {
     case 1:
       buffer.writeUInt8(numberValue, offset);
       break;
@@ -79,7 +79,7 @@ function writeArrayToBuffer(
 
 function readNumberFromBuffer(buffer: Buffer, schemaRecord: PacketSchemaNumber, offset: number): number | bigint {
   let result;
-  switch (schemaRecord.length) {
+  switch (schemaRecord.size) {
     case 1:
       result = buffer.readUint8(offset);
       break;
@@ -129,8 +129,10 @@ function readArrayFromBuffer(data: Buffer, schemaRecord: PacketSchemaArray, offs
 }
 
 export function getOffsetOf(currentOffset: number, record: PacketSchemaRecord) {
-  if (record.type !== 'array') return currentOffset + record.length;
-  return currentOffset + record.length * record.size;
+  if (record.type === 'array' || record.type === 'string') {
+    return currentOffset + record.length * record.size;
+  }
+  return currentOffset + record.size;
 }
 
 export function encode<TPayload extends PacketPayload>(payload: TPayload, schema: Schema<TPayload>): Buffer | never {

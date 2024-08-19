@@ -1,5 +1,11 @@
 import { PacketPayload, PacketSchemaFromPayload, PacketSchemaPublic, PacketSchemaRecord } from '../types';
 
+function isRecordWithLength(x: unknown): x is 'array' | 'string' {
+  return (
+    !!x && typeof x === 'object' && 'type' in x && typeof x.type === 'string' && ['array', 'string'].includes(x.type)
+  );
+}
+
 export class Schema<TPayload extends PacketPayload> {
   private schema: PacketSchemaFromPayload<TPayload>;
   constructor(schema: PacketSchemaPublic<TPayload>) {
@@ -16,7 +22,7 @@ export class Schema<TPayload extends PacketPayload> {
 
   calcBytesInPacket() {
     return Array.from(this.schema.values()).reduce((prev, current) => {
-      return current.type === 'array' ? prev + current.length * current.size : prev + current.length;
+      return isRecordWithLength(current) ? prev + current.length * current.size : prev + current.size;
     }, 0);
   }
 
@@ -31,7 +37,7 @@ export class Schema<TPayload extends PacketPayload> {
       if (value.type === 'array') {
         count += value.length * value.size;
       } else {
-        count += value.length;
+        count += value.size;
       }
     }
 

@@ -16,7 +16,7 @@ export class Schema<TPayload extends PacketPayload> {
     this.schema.set(key, value);
   }
 
-  getValue<T extends keyof TPayload>(key: keyof TPayload) {
+  getValue(key: keyof TPayload) {
     return this.schema.get(key);
   }
 

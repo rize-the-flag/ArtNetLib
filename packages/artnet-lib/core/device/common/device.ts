@@ -4,7 +4,7 @@ import { ArtNetLibError, DeviceActionsValidationError } from '../../lib-error';
 import { z, ZodSchema } from 'zod';
 import { InjectLogger } from '../../logger';
 import { LoggerInterface } from '../../logger/logger.interface';
-import { clamp } from '@rtf-dm/artnet-packets/build/types/lib/common/helpers'; // todo: move to shared
+import { clamp } from '@rtf-dm/common'; // todo: move to shared
 
 export abstract class Device implements ArtNetDevice {
   @InjectLogger protected logger: LoggerInterface;

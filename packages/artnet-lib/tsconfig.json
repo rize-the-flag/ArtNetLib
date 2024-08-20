@@ -5,7 +5,7 @@
     "composite": true,
     "declarationDir": "./build/types",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   },
   "exclude": ["./build", "**/*.test.ts"]
 }

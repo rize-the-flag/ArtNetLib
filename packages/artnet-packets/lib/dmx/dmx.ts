@@ -4,7 +4,6 @@ import { ThrowsException } from '../types';
 import { decode, Schema } from '@rtf-dm/protocol';
 import { clamp } from '../common/helpers';
 import { DmxPacketPayload } from './dmx.interface';
-import { ArtNetLibError } from '@rtf-dm/artnet-lib';
 
 export class Dmx extends ArtNetPacket<DmxPacketPayload> {
   static readonly DMX_CHANNEL_MAX = 512;
@@ -18,7 +17,7 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
     ['subNet', { size: 1, type: 'number' }],
     ['net', { size: 1, type: 'number' }],
     ['length', { size: 2, type: 'number', byteOrder: 'BE' }],
-    ['dmxData', { length: Dmx.DMX_CHANNEL_MAX, type: 'array', size: 1 }],
+    ['dmxData', { size: 1, length: Dmx.DMX_CHANNEL_MAX, type: 'array' }],
   ]);
 
   constructor(payload: Partial<DmxPacketPayload> = {}) {
@@ -84,7 +83,7 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
 
   checkChannelInRange(channel: number): void {
     if (channel > this.payload.length) {
-      throw new ArtNetLibError('NODE_PORTS_LIMIT', `Max allowed channel is ${this.payload.length}`);
+      throw new Error(`Max allowed channel for current packet is ${this.payload.length}`);
     }
   }
 
@@ -96,8 +95,11 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
   }
 
   public setChannels(data: number[]): ThrowsException<void> {
-    data.forEach((channel) => this.checkChannelInRange(channel));
-    this.payload.dmxData = data.map((x) => clamp(0, Dmx.DMX_CHANNEL_MAX, x));
+    this.payload.dmxData = data.map((x) => {
+      const inRange = clamp(0, Dmx.DMX_CHANNEL_MAX, x);
+      this.checkChannelInRange(inRange);
+      return inRange;
+    });
   }
 
   public getChannelValue(channel: number): number {

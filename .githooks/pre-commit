@@ -23,7 +23,6 @@ CURRENT_BRANCH=$(git branch --show-current)
 WORKSPACES=$(git diff $CURRENT_BRANCH --name-only -- packages | awk -F "/" '{printf "%s\n", $2}' | sort | uniq)
 
 for ws in $WORKSPACES; do
-    npm version patch --workspace=packages/$ws
+    #npm version patch --workspace=packages/$ws
+    printf $ws
 done
-
-git add .

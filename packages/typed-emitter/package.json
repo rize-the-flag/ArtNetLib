@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/typed-emitter",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "type": "commonjs",
   "description": "simple and very strong typed event emitter with additional functionalities",
   "main": "build/index.js",

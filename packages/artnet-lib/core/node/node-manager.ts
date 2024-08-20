@@ -11,7 +11,7 @@ import { AddressPacketPayload, PollReplyPacketPayload } from '@rtf-dm/artnet-pac
 
 export class NodeManager extends TypedEmitter<NodeManagerEvents> {
   protected readonly nodes: Node[] = [];
-  private nodeWatcherId: NodeJS.Timer;
+  private nodeWatcherId: NodeJS.Timeout;
   private nodeDeathTimeout: number = NODE_DEATH_TIMEOUT_MS;
 
   /**

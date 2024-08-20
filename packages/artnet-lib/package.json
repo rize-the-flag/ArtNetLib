@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/artnet-lib",
-  "version": "1.6.10",
+  "version": "1.6.11",
   "description": "ArtNet library",
   "main": "build/index.js",
   "types": "build/types",
@@ -21,9 +21,9 @@
   "author": "Rize-The-Flag",
   "license": "MIT",
   "dependencies": {
-    "@rtf-dm/artnet-packets": "^0.5.12",
-    "@rtf-dm/common": "^0.1.5",
-    "@rtf-dm/typed-emitter": "^0.1.5",
+    "@rtf-dm/artnet-packets": "^0.5.24",
+    "@rtf-dm/common": "^0.1.13",
+    "@rtf-dm/typed-emitter": "^0.1.13",
     "tslog": "^4.9.2",
     "zod": "^3.22.4"
   },

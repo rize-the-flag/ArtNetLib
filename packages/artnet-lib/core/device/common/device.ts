@@ -1,6 +1,6 @@
 import { ThrowsException } from '../../types';
 import { ArtNetDevice, ArtNetDeviceAction } from '../device.interface';
-import { DeviceActionsValidationError } from '../../lib-error';
+import { ArtNetLibError, DeviceActionsValidationError } from '../../lib-error';
 import { z, ZodSchema } from 'zod';
 import { InjectLogger } from '../../logger';
 import { LoggerInterface } from '../../logger/logger.interface';
@@ -17,8 +17,10 @@ export abstract class Device implements ArtNetDevice {
 
   protected setChannel(channel: number, value: number): ThrowsException<this> {
     if (channel > this.getDmxDataSize() - 1) {
-      // FIXME: throw ArtNetLib error
-      throw new Error(`Channel ${String(channel)} exceeds max device channel ${String(this.getDmxDataSize() - 1)} `);
+      throw new ArtNetLibError(
+        'CURRENT_PACKET_DATA_LIMIT',
+        `Channel ${String(channel)} exceeds max device channel ${String(this.getDmxDataSize() - 1)} `
+      );
     }
     this.dxmData[channel] = Math.max(0, Math.min(value, 255));
     this.logger.info(`setChannel(${String(channel)} => ${String(this.dxmData[channel])})`);

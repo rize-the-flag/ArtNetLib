@@ -29,7 +29,7 @@ export class Universe {
     //could allocate more than 512 channels
     const dmxDataSize = this.calcSize(device);
 
-    if (dmxDataSize > MAX_UNIVERSE_SIZE) {
+    if (dmxDataSize >= MAX_UNIVERSE_SIZE) {
       throw new ArtNetLibError('UNIVERSE_MAX_SIZE_REACHED');
     }
 
@@ -38,7 +38,7 @@ export class Universe {
   }
 
   public setDevice(device: InstanceType<valueOf<SupportedDevices>>, index: number): ThrowsException<void> {
-    if (this.calcSize(device, index) > MAX_UNIVERSE_SIZE) {
+    if (this.calcSize(device, index) >= MAX_UNIVERSE_SIZE) {
       throw new ArtNetLibError('UNIVERSE_MAX_SIZE_REACHED');
     }
     this.devices[index] = device;
@@ -74,6 +74,7 @@ export class Universe {
       []
     );
     this.controlPacket.setChannels(data);
+    this.controlPacket.incSequence();
     return this.controlPacket.encode();
   }
 

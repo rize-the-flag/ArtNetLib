@@ -2,8 +2,8 @@ import { ArtNetPacket } from '../common/art-net-packet';
 import { OP_CODE, PROTOCOL_VERSION } from '../constants';
 import { ThrowsException } from '../types';
 import { decode, Schema } from '@rtf-dm/protocol';
-import { clamp } from '../common/helpers';
 import { DmxPacketPayload } from './dmx.interface';
+import { clamp } from '@rtf-dm/common';
 
 export class Dmx extends ArtNetPacket<DmxPacketPayload> {
   static readonly DMX_CHANNEL_MAX = 512;
@@ -68,6 +68,12 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
 
   public getSubnet(): number {
     return this.payload.subNet;
+  }
+
+  public incSequence(): number {
+    this.payload.sequence = this.payload.sequence > 255 ? 0 : this.payload.sequence++;
+
+    return this.payload.sequence;
   }
 
   public setPhysicalPort(port = 0): this {

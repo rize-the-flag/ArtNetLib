@@ -6,7 +6,6 @@
     "declarationDir": "./build/types",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmitOnError": true
   },
   "exclude": ["./build", "**/*.test.ts"]
 }

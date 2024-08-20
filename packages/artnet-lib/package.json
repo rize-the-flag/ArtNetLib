@@ -1,6 +1,6 @@
 {
   "name": "@rtf-dm/artnet-lib",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "ArtNet library",
   "main": "build/index.js",
   "types": "build/types",

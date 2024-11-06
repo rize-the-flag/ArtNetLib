@@ -37,9 +37,9 @@ export class NodeManager extends TypedEmitter<NodeManagerEvents> {
         (node) => node.lastResponseTime.getTime() + this.nodeDeathTimeout <= now && node.isAlive
       );
 
-      deadNodes.forEach((node) => (node.isAlive = false));
-
       deadNodes.forEach((node) => {
+        node.isAlive = false;
+        
         this.emit('NODE_IS_DEAD', {
           name: node.name,
           ipAddress: node.ipAddress,
@@ -48,6 +48,7 @@ export class NodeManager extends TypedEmitter<NodeManagerEvents> {
           portInfo: node.portInfo,
           isAlive: node.isAlive,
         });
+        
       });
     }, watchInterval);
   }

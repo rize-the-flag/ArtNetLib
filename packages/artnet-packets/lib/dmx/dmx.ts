@@ -71,7 +71,7 @@ export class Dmx extends ArtNetPacket<DmxPacketPayload> {
   }
 
   public incSequence(): number {
-    this.payload.sequence = this.payload.sequence > 255 ? 0 : this.payload.sequence++;
+    this.payload.sequence = this.payload.sequence >= 255 ? 0 : this.payload.sequence++;
 
     return this.payload.sequence;
   }

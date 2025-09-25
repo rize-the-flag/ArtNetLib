@@ -14,7 +14,7 @@ export class Discovery {
   accessor sendArtPollReply: boolean;
 
   private isActive = false;
-  private pollTimer: NodeJS.Timer;
+  private pollTimer: NodeJS.Timeout;
   private pollingInterval: number = DEFAULT_POLL_INTERVAL;
 
   private pollReplyPacket: PollReply;

@@ -1,13 +1,11 @@
 name: Npm Publish
 on:
   push:
-    tags:
-      - release_'*'.'*'.'*'
-      - beta_'*'.'*'.'*'
+    branches:
+      - master
   pull_request:
     tags:
-      - release_'*'.'*'.'*'
-      - beta_'*'.'*'.'*'
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest

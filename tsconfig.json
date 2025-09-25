@@ -9,7 +9,8 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "sourceMap": false,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "noEmitOnError": true
   },
   "paths": {
     "@packages/*": [

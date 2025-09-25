@@ -11,7 +11,7 @@ import { AddressPacketPayload, PollReplyPacketPayload } from '@rtf-dm/artnet-pac
 
 export class NodeManager extends TypedEmitter<NodeManagerEvents> {
   protected readonly nodes: Node[] = [];
-  private nodeWatcherId: NodeJS.Timer;
+  private nodeWatcherId: NodeJS.Timeout;
   private nodeDeathTimeout: number = NODE_DEATH_TIMEOUT_MS;
 
   /**
@@ -37,9 +37,9 @@ export class NodeManager extends TypedEmitter<NodeManagerEvents> {
         (node) => node.lastResponseTime.getTime() + this.nodeDeathTimeout <= now && node.isAlive
       );
 
-      deadNodes.forEach((node) => (node.isAlive = false));
-
       deadNodes.forEach((node) => {
+        node.isAlive = false;
+        
         this.emit('NODE_IS_DEAD', {
           name: node.name,
           ipAddress: node.ipAddress,
@@ -48,6 +48,7 @@ export class NodeManager extends TypedEmitter<NodeManagerEvents> {
           portInfo: node.portInfo,
           isAlive: node.isAlive,
         });
+        
       });
     }, watchInterval);
   }

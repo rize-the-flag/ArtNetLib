@@ -4,6 +4,7 @@ import { ArtNetLibError, DeviceActionsValidationError } from '../../lib-error';
 import { z, ZodSchema } from 'zod';
 import { InjectLogger } from '../../logger';
 import { LoggerInterface } from '../../logger/logger.interface';
+import { clamp } from '@rtf-dm/common'; // todo: move to shared
 
 export abstract class Device implements ArtNetDevice {
   @InjectLogger protected logger: LoggerInterface;
@@ -22,7 +23,7 @@ export abstract class Device implements ArtNetDevice {
         `Channel ${String(channel)} exceeds max device channel ${String(this.getDmxDataSize() - 1)} `
       );
     }
-    this.dxmData[channel] = Math.max(0, Math.min(value, 255));
+    this.dxmData[channel] = clamp(0, 255, value);
     this.logger.info(`setChannel(${String(channel)} => ${String(this.dxmData[channel])})`);
     return this;
   }

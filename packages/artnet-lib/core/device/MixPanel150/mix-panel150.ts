@@ -31,7 +31,6 @@ export class MixPanel150 extends Device {
   }
 
   public setBrightness({ percent }: { percent: number }): void {
-    this.logger.info('USEFULL INFO DELETE PLEASE 2');
     const percentInRange = Math.max(
       Constants.BRIGHTNESS_PERCENT_MIN,
       Math.min(Constants.BRIGHTNESS_PERCENT_MAX, percent)

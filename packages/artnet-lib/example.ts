@@ -1,5 +1,5 @@
 import { ArtNetImpl, NodeStatusPayload } from './index';
-import { Command, Dmx, DmxPacketPayload, PROTOCOL_VERSION } from '@rtf-dm/artnet-packets';
+import { DmxPacketPayload, PROTOCOL_VERSION } from '@rtf-dm/artnet-packets';
 
 void (async () => {
   const artnet = new ArtNetImpl({
@@ -10,91 +10,97 @@ void (async () => {
 
   await artnet.init();
 
-  // Setup discovery reply ip address (When some node sends an art-poll packet, discovery will reply with info provided to this method)
-  // There are a lot of fields that could be set.
-  // Refer to ArtPollReply packet definition;
+  // Configure discovery reply IP address
+  // When a node sends an ArtPoll packet, discovery will reply with the provided information
+  // Multiple fields can be configured - refer to ArtPollReply packet definition
   artnet.discovery.setReplyInfo({
     ipAddress: '192.168.1.23'.split('.').map((oct) => parseInt(oct)),
   });
 
   const [node1] = await artnet.nodeManager.waitFor('NEW_NODE_REGISTERED');
 
-  // Each time when node status or settings changed, 'NODE_STATUS_UPDATED' event fired
+  // Fires whenever node status or settings change
   artnet.nodeManager.addListener('NODE_STATUS_UPDATED', (payload: NodeStatusPayload) => {
-    console.log(`node updated: ${payload.name}`);
+    console.log(`Node updated: ${payload.name}`);
   });
 
-  // When node didn't response with poll reply for some time, it marked as dead and 'NODE_IS_DEAD' event fired;
+  // Fires when a node doesn't respond to poll replies and is marked as dead
   artnet.nodeManager.addListener('NODE_IS_DEAD', (payload: NodeStatusPayload) => {
-    console.log(`node dead: ${payload.name}`);
+    console.log(`Node dead: ${payload.name}`);
   });
 
+  // Wait to receive node updated event
   await new Promise((resolve) =>
     setTimeout(() => {
       resolve(1);
     }, 5000)
-  ); //Timeout to get node updated event
+  );
 
-  artnet.discovery.sendArtPollReply = false; //disable reply on poll to demonstrate node dead event;
+  // Disable poll replies to demonstrate node dead event
+  artnet.discovery.sendArtPollReply = false;
 
+  // Wait to receive node dead event
   await new Promise((resolve) =>
     setTimeout(() => {
       resolve(1);
     }, 10000)
-  ); //Timeout to get node dead event
+  );
 
   artnet.discovery.sendArtPollReply = true;
 
-  //Add Devices to created Universe mixpanel150 ([index 0]) - Generic ([index 1]) - MixPanel150 ([index 2]) - Generic([index 3]) ... e.t.c.
-  const verse = artnet.createUniverse('my-Universe', [
+  // Create universe with devices:
+  // MixPanel150 [index 0] - Generic [index 1] - MixPanel150 [index 2] - Generic [index 3]
+  const universe = artnet.createUniverse('my-Universe', [
     { deviceDriver: 'Generic', numChannels: 5 },
     { deviceDriver: 'MixPanel150' },
     { deviceDriver: 'Generic', numChannels: 12 },
     { deviceDriver: 'Generic', numChannels: 2 },
   ]);
 
-  if (!verse) return null; //Universe with the name 'my-Universe' already exists;
+  if (!universe) return null; // Universe with name 'my-Universe' already exists
 
-  //Set action for device group which implemented 'MixPanel150' interface and call api
-  verse.getDevice('MixPanel150').forEach((device) => {
+  // Configure devices implementing MixPanel150 interface
+  universe.getDevice('MixPanel150').forEach((device) => {
     device.setBrightness({ percent: 100 });
     device.setLightMode({ mode: 'BOOST' });
   });
 
-  //Get a device by index 0 and assume it as a 'Generic' device
-  verse.getDevice<'Generic'>(0)?.setChannels({
+  // Access device at index 0 as Generic device
+  universe.getDevice<'Generic'>(0)?.setChannels({
     channels: [1, 2, 3, 4, 0],
   });
 
-  //Get a device by index 1 and assume it as 'MixPanel150' device
-  verse.getDevice<'MixPanel150'>(1)?.setGreenMagentaBias({
+  // Access device at index 1 as MixPanel150 device
+  universe.getDevice<'MixPanel150'>(1)?.setGreenMagentaBias({
     bias: -5,
   });
 
-  // Set a single channel for a generic device with index 2 (Device index is a physical device order in DMX chain)
-  verse.getDevice<'Generic'>(2)?.setChannel(0, 255);
+  // Set single channel for Generic device at index 2
+  // Device index represents physical order in DMX chain
+  universe.getDevice<'Generic'>(2)?.setChannel(0, 255);
 
   // Set channels [0, 1] to values [100, 255] respectively
-  verse.getDevice<'Generic'>(3)?.setChannels({
+  universe.getDevice<'Generic'>(3)?.setChannels({
     channels: [100, 255],
   });
 
-  // Attach a created universe to node port 0.
-  // This node will automatically update universe port when you call Node::syncRemotePort method of node instance
-  // or when you call NodeManager::syncAllNodes()
-  // Interface of this method will be changed in the nearest future (node.name => node.macAddress)
-  artnet.nodeManager.attachUniverse(node1.name, 0, verse);
+  // Attach universe to node port 0
+  // The node will automatically update universe port when calling:
+  // - Node::syncRemotePort() on node instance
+  // - NodeManager::syncAllNodes()
+  // Note: Method interface will change soon (node.name → node.macAddress)
+  artnet.nodeManager.attachUniverse(node1.name, 0, universe);
 
-  // Broadcast a universe devices state to entire network.
-  // Use this api only for detached universes. Since for controlled universes this doesn't make sense
-  const sentBytes = await artnet.sendBroadcast(verse);
+  // Broadcast universe state to entire network
+  // Use this API only for detached universes (not applicable for controlled universes)
+  const sentBytes = await artnet.sendBroadcast(universe);
+  console.log(`${sentBytes} bytes sent`);
 
-  console.log(`${sentBytes} bytes was sent`);
-
-  //Send all attached universes of all nodes and all ports
+  // Synchronize all attached universes across all nodes and ports
   const sentBytesArray = await artnet.nodeManager.syncAllNodes();
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  console.log(`${sentBytesArray} bytes was sent`);
+
+  // eslint-disable-next-line
+  console.log(`${sentBytesArray} bytes sent`);
 
   const dmxPacketPayload: DmxPacketPayload = {
     protoVersion: PROTOCOL_VERSION,
@@ -105,13 +111,6 @@ void (async () => {
     physical: 3,
     dmxData: new Array<number>(16).fill(255, 0, 16),
   };
-
-  await artnet.communicator.sendBroadcast(
-    new Command({
-      data: 'SOSI HUI',
-      length: 'SOSI HUI'.length,
-    }).encode()
-  );
 
   await artnet.dispose();
 })().then(async () => {
@@ -135,6 +134,7 @@ void (async () => {
       },
     ]);
 
+    // Broadcast action to all Generic devices in universe
     await artNet.broadcastUniverse({
       type: 'Group',
       universeName: 'my_universe',
@@ -148,6 +148,7 @@ void (async () => {
       },
     });
 
+    // Broadcast action to specific device at index 0
     await artNet.broadcastUniverse({
       type: 'Exact',
       universeName: 'my_universe',
@@ -161,19 +162,22 @@ void (async () => {
       },
     });
 
+    // Configure node settings
     await artNet.nodeManager.getByMac(nodeInfo.macAddress)?.configure({
-      netSwitch: 2, // Net
-      netSubSwitch: 12, //Subnet
-      swOut: [1, 2, 3, 4], // Out universes for ports
-      longName: 'The Best ArtNet node ever', // Long name is used as node-name in a library since some ArtNet Wi-Fi dongles have a lot of buggs with shortName
-      swIn: [1, 2, 3, 4], // In universes for ports (could be configured but currently unused)
+      netSwitch: 2, // Net address
+      netSubSwitch: 12, // Subnet address
+      swOut: [1, 2, 3, 4], // Output universes for ports
+      longName: 'The Best ArtNet Node Ever', // Used as node name (some Wi-Fi dongles have issues with shortName)
+      swIn: [1, 2, 3, 4], // Input universes for ports (configurable but currently unused)
     });
 
+    // Attach universe to multiple node ports
     artNet.attachUniverse(nodeInfo.macAddress, 0, 'my_universe');
     artNet.attachUniverse(nodeInfo.macAddress, 1, 'my_universe');
     artNet.attachUniverse(nodeInfo.macAddress, 2, 'my_universe');
     artNet.attachUniverse(nodeInfo.macAddress, 3, 'my_universe');
 
+    // Multicast to attached nodes
     await artNet.multicastUniverse({
       type: 'Group',
       universeName: 'my_universe',
@@ -187,6 +191,7 @@ void (async () => {
       },
     });
 
+    // Unicast to specific node
     await artNet.unicastUniverse(nodeInfo.macAddress, {
       type: 'Group',
       universeName: 'my_universe',
